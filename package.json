@@ -1,0 +1,32 @@
+{
+  "name": "web-bnc",
+  "version": "0.0.0",
+  "description": "BNC with a web UI",
+  "main": "index.js",
+  "scripts": {
+    "validate": "jshint",
+    "test": "exit 1",
+    "dev": "nodemon index.js",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CMTegner/web-bnc"
+  },
+  "keywords": [
+    "irc",
+    "bnc"
+  ],
+  "author": "Christian Maughan Tegner",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/CMTegner/web-bnc/issues"
+  },
+  "homepage": "https://github.com/CMTegner/web-bnc",
+  "dependencies": {
+    "irc": "^0.3.6"
+  },
+  "devDependencies": {
+    "nodemon": "^1.0.17"
+  }
+}
