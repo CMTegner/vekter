@@ -24,7 +24,8 @@
   },
   "homepage": "https://github.com/CMTegner/web-bnc",
   "dependencies": {
-    "irc": "^0.3.6"
+    "irc": "^0.3.6",
+    "level": "^0.18.0"
   },
   "devDependencies": {
     "nodemon": "^1.0.17"
