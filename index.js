@@ -1,17 +1,26 @@
 var level = require('level');
 var messages = level('.messages');
+var users = level('.users');
 
 var irc = require('irc');
 var client = new irc.Client('open.ircnet.net', 'christianBNC');
 
 client.addListener('pm', function (from, message) {
+    from = from.toLowerCase();
     console.log(from + ' => ME: ' + message);
     var key = createKey(from);
     messages.put(key, message, function (err) {
         if (err) {
-            console.error(err);
+            console.error('Error while storing incoming message', err);
+            return;
         }
-        say(from, 'dude...');
+        users.put(from, from, function (err) {
+            if (err) {
+                console.error('Error while storing user', err);
+                return;
+            }
+            say(from, 'dude...');
+        });
     });
 });
 
@@ -29,13 +38,20 @@ function createKey(user) {
 }
 
 function say(user, message) {
+    user = user.toLowerCase();
     var key = createKey(user);
     messages.put(key, message, function (err) {
         if (err) {
-            console.error(err);
+            console.error('Error while storing outgoing message', err);
             return;
         }
-        client.say(user, message);
+        users.put(user, user, function (err) {
+            if (err) {
+                console.error('Error while storing user', err);
+                return;
+            }
+            client.say(user, message);
+        });
     });
 }
 
