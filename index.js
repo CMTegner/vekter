@@ -1,57 +1,46 @@
-var level = require('level');
-var messages = level('.messages');
-var users = level('.users');
+var hapi = require('hapi');
 
-var irc = require('irc');
-var client = new irc.Client('open.ircnet.net', 'christianBNC');
+/**
+ * Create a new server.
+ *
+ * @param {irc.Client} client TODO
+ * @param {level} users TODO
+ * @param {level} messages TODO
+ * @param {Number} [port] the server's port, defaults to 0 (ephemeral)
+ * @returns {Server} the hapi server object, ready to be started
+ */
+module.exports = function (client, users, messages, port) {
+    var api = require('./api')(client, users, messages);
+    var server = hapi.createServer(port || 0);
 
-client.addListener('pm', function (from, message) {
-    from = from.toLowerCase();
-    console.log(from + ' => ME: ' + message);
-    var key = createKey(from);
-    messages.put(key, message, function (err) {
-        if (err) {
-            console.error('Error while storing incoming message', err);
-            return;
-        }
-        users.put(from, from, function (err) {
-            if (err) {
-                console.error('Error while storing user', err);
-                return;
+    // UI
+    server.route({
+        path: '/{file*}',
+        method: 'GET',
+        handler: {
+            directory: {
+                path: 'ui/',
+                index: true
             }
-            say(from, 'dude...');
-        });
-    });
-});
-
-client.addListener('error', function (err) {
-    console.error(err);
-});
-
-client.addListener('registered', function () {
-    console.log('connected');
-    say('christian', 'lol idk');
-});
-
-function createKey(user) {
-    return user + '☃' + new Date().toUTCString();
-}
-
-function say(user, message) {
-    user = user.toLowerCase();
-    var key = createKey(user);
-    messages.put(key, message, function (err) {
-        if (err) {
-            console.error('Error while storing outgoing message', err);
-            return;
         }
-        users.put(user, user, function (err) {
-            if (err) {
-                console.error('Error while storing user', err);
-                return;
-            }
-            client.say(user, message);
-        });
     });
-}
 
+    // API
+    server.route({
+        path: '/messages',
+        method: 'GET',
+        handler: api.messages
+    });
+    server.route({
+        path: '/users',
+        method: 'GET',
+        handler: api.users
+    });
+    server.route({
+        path: '/say',
+        method: 'POST',
+        handler: api.say
+    });
+
+    return server;
+};
