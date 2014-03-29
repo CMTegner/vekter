@@ -1,5 +1,5 @@
 var level = require('level');
-var db = level('.db');
+var messages = level('.messages');
 
 var irc = require('irc');
 var client = new irc.Client('open.ircnet.net', 'christianBNC');
@@ -7,7 +7,7 @@ var client = new irc.Client('open.ircnet.net', 'christianBNC');
 client.addListener('pm', function (from, message) {
     console.log(from + ' => ME: ' + message);
     var key = createKey(from);
-    db.put(key, message, function (err) {
+    messages.put(key, message, function (err) {
         if (err) {
             console.error(err);
         }
@@ -30,7 +30,7 @@ function createKey(user) {
 
 function say(user, message) {
     var key = createKey(user);
-    db.put(key, message, function (err) {
+    messages.put(key, message, function (err) {
         if (err) {
             console.error(err);
             return;
