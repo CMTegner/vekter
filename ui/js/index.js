@@ -53,9 +53,14 @@ function listUsers(callback) {
 
 listUsers();
 getMessages();
-setInterval(getMessages, 500);
+setInterval(getMessages, 500); // TODO: socket.io
 
-window.say = function (user, message) {
+document.forms[0].addEventListener('submit', function (event) {
+    event.preventDefault();
+    var input = document.querySelector('input');
+    var user = input.value;
+    var textarea = document.querySelector('textarea');
+    var message = textarea.value;
     var opts = {
         headers: {
             'Content-Type': 'application/json'
@@ -67,10 +72,11 @@ window.say = function (user, message) {
             throw err; // TODO
         })
         .on('end', function () {
-            console.log('OK');
+            textarea.value = '';
+            textarea.focus();
         })
         .end(JSON.stringify({
             user: user,
             message: message
         }));
-};
+});
