@@ -4,7 +4,7 @@ var moment = require('moment');
 module.exports = Model.extend({
 
     defaults: {
-        id: undefined, // String, e.g. "christian☃Sat, 29 Mar 2014 13:12:13 GMT"
+        id: undefined, // String, e.g. "christian☃2014-03-30T10:46:51.747Z"
         time: undefined, // moment
         user: undefined, // String
         message: undefined // String
