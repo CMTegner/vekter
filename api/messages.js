@@ -1,7 +1,11 @@
 module.exports = function (messages) {
     return function (request, reply) {
+        var opts = {};
+        if (request.query.start) {
+            opts.start = request.query.start;
+        }
         var data = [];
-        messages.createReadStream()
+        messages.createReadStream(opts)
             // TODO: concat-json-stream
             .on('data', function (chunk) {
                 var tokens = chunk.key.split('☃'); // TODO

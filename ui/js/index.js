@@ -7,18 +7,24 @@ var messages = new MessageCollection();
 messages.on('add', function (message) {
     var row = document.createElement('div');
     row.innerText = message.get('name')
-        + ' (' + message.get('time')
+        + ' (' + message.get('time').fromNow()
         + '): '
         + message.get('message');
     document.querySelector('[data-role=message-container]').appendChild(row);
 });
 
 function getMessages() {
-    request('http://localhost:13333/messages')
+    var uri = 'http://localhost:13333/messages';
+    var last = messages.last();
+    if (last) {
+        uri += '?start=' + last.id + '~'
+    }
+    request(uri)
         .on('error', function (err) {
             throw err; // TODO
         })
         .pipe(concat(function (data) {
+            // TODO: data is an empty array when the backend can't be reached, wtf?
             messages.add(JSON.parse(data), { parse: true });
         }));
 }
@@ -50,10 +56,6 @@ getMessages();
 setInterval(getMessages, 500);
 
 window.say = function (user, message) {
-    var data = {
-        user: user,
-        message: message
-    };
     var opts = {
         headers: {
             'Content-Type': 'application/json'
@@ -66,8 +68,9 @@ window.say = function (user, message) {
         })
         .on('end', function () {
             console.log('OK');
-            document.body.innerHTML = '';
-            listUsers(listMessages);
         })
-        .end(JSON.stringify(data));
+        .end(JSON.stringify({
+            user: user,
+            message: message
+        }));
 };
