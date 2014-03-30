@@ -4,7 +4,14 @@ module.exports = function (messages) {
         messages.createReadStream()
             // TODO: concat-json-stream
             .on('data', function (chunk) {
-                data.push(chunk);
+                var tokens = chunk.key.split('☃'); // TODO
+                var message = {
+                    id: chunk.key,
+                    name: tokens[0],
+                    time: tokens[1],
+                    message: chunk.value
+                };
+                data.push(message);
             })
             .on('end', function () {
                 reply(data);

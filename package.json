@@ -30,7 +30,9 @@
     "hapi": "^3.1.0",
     "hyperquest": "^0.3.0",
     "concat-stream": "^1.4.4",
-    "browserify": "^3.38.0"
+    "browserify": "^3.38.0",
+    "backbone": "^1.1.2",
+    "moment": "^2.5.1"
   },
   "devDependencies": {
     "nodemon": "^1.0.17"
