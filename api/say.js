@@ -1,8 +1,19 @@
 var createKey = require('./create-key.js');
 
 module.exports = function (client, users, messages) {
-    return function (user, message) {
-        user = user.toLowerCase();
+    return function (request, reply) {
+        var user = request.payload.user;
+        user = user && user.trim() && user.toLowerCase();
+        if (!user) {
+            reply('Missing user').code(400);
+            return;
+        }
+        var message = request.payload.message;
+        message = message && message.trim();
+        if (!message) {
+            reply('Missing message').code(400);
+            return;
+        }
         users.put(user, user, function (err) {
             if (err) {
                 console.error('Error while storing user', err);
@@ -15,6 +26,7 @@ module.exports = function (client, users, messages) {
                     return;
                 }
                 client.say(user, message);
+                reply();
             });
         });
     };

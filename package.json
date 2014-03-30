@@ -6,6 +6,7 @@
   "scripts": {
     "validate": "jshint",
     "test": "exit 1",
+    "build": "browserify ui/js/index.js > ui/js/bundle.js",
     "dev": "nodemon bin/server.js 13333 .users .messages",
     "start": "node bin/server.js 13333 .users .messages"
   },
@@ -26,7 +27,10 @@
   "dependencies": {
     "irc": "^0.3.6",
     "level": "^0.18.0",
-    "hapi": "^3.1.0"
+    "hapi": "^3.1.0",
+    "hyperquest": "^0.3.0",
+    "concat-stream": "^1.4.4",
+    "browserify": "^3.38.0"
   },
   "devDependencies": {
     "nodemon": "^1.0.17"
