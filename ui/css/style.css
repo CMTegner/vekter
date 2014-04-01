@@ -1,3 +1,26 @@
-body {
-    font-family: Georgia, sans-serif;
+.users,
+.messages,
+.say {
+    border: 1px solid #ddd;
+}
+
+.users {
+    border-right-color: #fff;
+}
+
+.user {
+    padding: 10px 0;
+}
+
+.messages {
+    border-bottom: none;
+}
+
+.say {
+    border-top: none;
+}
+
+.form-control,
+.btn {
+    border-radius: 0;
 }

@@ -6,10 +6,11 @@ var messages = new MessageCollection();
 
 messages.on('add', function (message) {
     var row = document.createElement('div');
-    row.innerText = message.get('name')
-        + ' (' + message.get('time').fromNow()
-        + '): '
-        + message.get('message');
+    row.innerHTML = '<small><em>'
+        + message.get('time').fromNow()
+        + '</em></small><br>'
+        + message.get('message')
+        + '<br>';
     document.querySelector('[data-role=message-container]').appendChild(row);
 });
 
@@ -40,13 +41,19 @@ function listUsers(callback) {
             }
         })
         .pipe(concat(function (data) {
-            console.log(data);
-            console.log(JSON.parse(data));
             var sessions = JSON.parse(data);
             sessions.forEach(function (session) {
                 var row = document.createElement('div');
+                row.className = 'user pull-right';
+                row.innerHTML = '<small><em>'
+                    + session.value
+                    + '</em></small>';
+                document.querySelector('[data-role=user-container]').appendChild(row);
+                row = document.createElement('div');
+                row.className = 'user';
                 row.innerHTML = session.key;
                 document.querySelector('[data-role=user-container]').appendChild(row);
+
             })
         }));
 }

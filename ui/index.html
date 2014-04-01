@@ -2,21 +2,32 @@
 <html>
 <head>
     <title>web-bnc</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css" />
     <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
-<h1>web-bnc</h1>
-<h2>Users</h2>
-<div data-role="user-container"></div>
-<h2>Messages</h2>
-<div data-role="message-container"></div>
-<form>
-    <label for="user">User</label>
-    <input type="text" id="user">
-    <label for="message">Message</label>
-    <textarea id="message"></textarea>
-    <button type="submit">Send</button>
-</form>
+<div class="container">
+    <div class="row">
+        <div class="users col-md-3 col-lg-offset-2" data-role="user-container"></div>
+        <div class="messages col-md-5" data-role="message-container"></div>
+    </div>
+    <div class="row">
+        <div class="say col-lg-offset-5 col-md-5">
+            <form>
+                <input class="form-control" type="hidden" value="christian">
+                <div class="form-group">
+                    <textarea id="message"
+                              class="form-control"
+                              autofocus></textarea>
+                    <button class="btn btn-primary btn-block"
+                            type="submit">
+                        Send
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 <script src="js/bundle.js"></script>
 </body>
 </html>
