@@ -14,7 +14,11 @@ module.exports = function (client, users, messages) {
             reply('Missing message').code(400);
             return;
         }
-        users.put(user, user, function (err) {
+        var data = {
+            latestMessage: message,
+            latestMessageTime: new Date().toISOString()
+        };
+        users.put(user, data, function (err) {
             if (err) {
                 console.error('Error while storing user', err);
                 return;

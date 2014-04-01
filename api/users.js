@@ -4,7 +4,12 @@ module.exports = function (users) {
         users.createReadStream()
             // TODO: concat-json-stream
             .on('data', function (chunk) {
-                data.push(chunk);
+                var user = {
+                    id: chunk.key,
+                    latestMessageTime: chunk.value.latestMessageTime,
+                    latestMessage: chunk.value.latestMessage
+                };
+                data.push(user);
             })
             .on('end', function () {
                 reply(data);

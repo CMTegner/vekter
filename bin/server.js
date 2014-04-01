@@ -7,7 +7,9 @@ var userDBPath = process.argv[3];
 var messagesDBPath = process.argv[4];
 
 var level = require('level');
-var users = level(userDBPath);
+var users = level(userDBPath, {
+    valueEncoding: 'json'
+});
 var messages = level(messagesDBPath);
 var Client = require('irc').Client;
 var client = new Client('open.ircnet.net', 'christianBNC');

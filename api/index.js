@@ -3,7 +3,11 @@ var createKey = require('./create-key.js');
 module.exports = function (client, users, messages) {
     client.addListener('pm', function (from, message) {
         from = from.toLowerCase();
-        users.put(from, from, function (err) {
+        var data = {
+            latestMessage: message,
+            latestMessageTime: new Date().toISOString()
+        };
+        users.put(from, data, function (err) {
             if (err) {
                 console.error('Error while storing user', err);
                 return;
