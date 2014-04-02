@@ -1,3 +1,4 @@
+var url = require('url');
 var request = require('hyperquest');
 var concat = require('concat-stream');
 var MessageCollection = require('./collections/Message.js');
@@ -8,6 +9,8 @@ var users = new UserCollection();
 
 // getMessages interval id
 var mid;
+var uri = url.parse(location.href);
+var host = uri.protocol + '//' + uri.hostname + ':' + uri.port;
 
 messages.on('add', function (message) {
     var row = document.createElement('div');
@@ -44,7 +47,7 @@ users.on('add', function (user) {
 });
 
 function getMessages(user) {
-    var uri = 'http://localhost:13333/messages';
+    var uri = host + '/messages';
     var last = messages.last();
     if (user) {
         uri += '?user=' + user;
@@ -62,7 +65,7 @@ function getMessages(user) {
 }
 
 function getUsers(callback) {
-    request('http://localhost:13333/users')
+    request(host + '/users')
         .on('error', function (err) {
             throw err; // TODO
         })
@@ -124,7 +127,7 @@ document.forms[0].addEventListener('submit', function (event) {
         },
         method: 'POST'
     };
-    request('http://localhost:13333/say', opts)
+    request(host + '/say', opts)
         .on('error', function (err) {
             throw err; // TODO
         })
