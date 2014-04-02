@@ -1,6 +1,10 @@
 module.exports = function (messages) {
     return function (request, reply) {
         var opts = {};
+        if (request.query.user) {
+            opts.start = request.query.user + '☃';
+            opts.end  = request.query.user + '☃~';
+        }
         if (request.query.start) {
             opts.start = request.query.start;
         }

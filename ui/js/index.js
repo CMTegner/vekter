@@ -6,6 +6,9 @@ var UserCollection = require('./collections/User.js');
 var messages = new MessageCollection();
 var users = new UserCollection();
 
+// getMessages interval id
+var mid;
+
 messages.on('add', function (message) {
     var row = document.createElement('div');
     row.innerHTML = '<small><em>'
@@ -14,6 +17,10 @@ messages.on('add', function (message) {
         + message.get('message')
         + '<br>';
     document.querySelector('[data-role=message-container]').appendChild(row);
+});
+
+messages.on('reset', function () {
+    document.querySelector('[data-role=message-container]').innerHTML = '';
 });
 
 users.on('add', function (user) {
@@ -36,10 +43,12 @@ users.on('add', function (user) {
     row.addEventListener('click', onUserClick);
 });
 
-function getMessages() {
+function getMessages(user) {
     var uri = 'http://localhost:13333/messages';
     var last = messages.last();
-    if (last) {
+    if (user) {
+        uri += '?user=' + user;
+    } else  if (last) {
         uri += '?start=' + last.id + '~'
     }
     request(uri)
@@ -52,7 +61,7 @@ function getMessages() {
         }));
 }
 
-function getUsers() {
+function getUsers(callback) {
     request('http://localhost:13333/users')
         .on('error', function (err) {
             throw err; // TODO
@@ -60,17 +69,25 @@ function getUsers() {
         .pipe(concat(function (data) {
             // TODO: data is an empty array when the backend can't be reached, wtf?
             users.add(JSON.parse(data), { parse: true, merge: true });
+            if (callback) {
+                callback();
+            }
         }));
 }
 
-getUsers();
-setInterval(getUsers, 500); // TODO: socket.io
-getMessages();
-setInterval(getMessages, 500); // TODO: socket.io
+getUsers(function () {
+    var user = users.first();
+    if (user) {
+        selectUser(user.id);
+    }
+    setInterval(getUsers, 500); // TODO: socket.io
+});
 
 document.querySelector('[data-role=new-pm]').addEventListener('click', function (event) {
     event.preventDefault();
     event.stopPropagation();
+    clearInterval(mid);
+    messages.reset();
     var input = document.querySelector('input');
     input.style.display = 'block';
     input.value = '';
@@ -79,11 +96,20 @@ document.querySelector('[data-role=new-pm]').addEventListener('click', function 
 
 function onUserClick(event) {
     event.preventDefault();
+    selectUser(event.currentTarget.getAttribute('data-user'));
+}
+
+function selectUser(user) {
     var input = document.querySelector('input');
     input.style.display = 'none';
-    input.value = event.currentTarget.getAttribute('data-user');
+    input.value = user;
     document.querySelector('textarea').focus();
-    // TODO: Reload messages
+    messages.reset();
+    getMessages(user);
+    clearInterval(mid);
+    mid = setInterval(function () {
+        getMessages(user)
+    }, 500); // TODO: socket.io
 }
 
 document.forms[0].addEventListener('submit', function (event) {
