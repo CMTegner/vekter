@@ -8,14 +8,18 @@
 <body>
 <div class="container">
     <div class="row">
-        <div class="users col-md-3 col-lg-offset-2" data-role="user-container"></div>
+        <div class="users col-md-3 col-lg-offset-2" data-role="user-container">
+            <a href="#" class="user" data-role="new-pm">
+                + Message User
+            </a>
+        </div>
         <div class="messages col-md-5" data-role="message-container"></div>
     </div>
     <div class="row">
         <div class="say col-lg-offset-5 col-md-5">
             <form>
-                <input class="form-control" type="hidden" value="christian">
                 <div class="form-group">
+                    <input class="form-control" type="text">
                     <textarea id="message"
                               class="form-control"
                               autofocus></textarea>

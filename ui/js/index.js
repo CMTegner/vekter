@@ -19,6 +19,7 @@ messages.on('add', function (message) {
 users.on('add', function (user) {
     var row = document.createElement('div');
     row.className = 'user';
+    row.setAttribute('data-user', user.id);
     row.innerHTML = '<small class="pull-right"><em>'
         + user.get('latestMessageTime').fromNow()
         + '</em></small>'
@@ -32,6 +33,7 @@ users.on('add', function (user) {
             + user.id
             + '<div>' + user.get('latestMessage') + '</div>';
     });
+    row.addEventListener('click', onUserClick);
 });
 
 function getMessages() {
@@ -65,6 +67,24 @@ getUsers();
 setInterval(getUsers, 500); // TODO: socket.io
 getMessages();
 setInterval(getMessages, 500); // TODO: socket.io
+
+document.querySelector('[data-role=new-pm]').addEventListener('click', function (event) {
+    event.preventDefault();
+    event.stopPropagation();
+    var input = document.querySelector('input');
+    input.style.display = 'block';
+    input.value = '';
+    input.focus();
+});
+
+function onUserClick(event) {
+    event.preventDefault();
+    var input = document.querySelector('input');
+    input.style.display = 'none';
+    input.value = event.currentTarget.getAttribute('data-user');
+    document.querySelector('textarea').focus();
+    // TODO: Reload messages
+}
 
 document.forms[0].addEventListener('submit', function (event) {
     event.preventDefault();
