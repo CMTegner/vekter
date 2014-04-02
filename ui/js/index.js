@@ -1,8 +1,10 @@
 var request = require('hyperquest');
 var concat = require('concat-stream');
 var MessageCollection = require('./collections/Message.js');
+var UserCollection = require('./collections/User.js');
 
 var messages = new MessageCollection();
+var users = new UserCollection();
 
 messages.on('add', function (message) {
     var row = document.createElement('div');
@@ -12,6 +14,24 @@ messages.on('add', function (message) {
         + message.get('message')
         + '<br>';
     document.querySelector('[data-role=message-container]').appendChild(row);
+});
+
+users.on('add', function (user) {
+    var row = document.createElement('div');
+    row.className = 'user';
+    row.innerHTML = '<small class="pull-right"><em>'
+        + user.get('latestMessageTime').fromNow()
+        + '</em></small>'
+        + user.id
+        + '<div>' + user.get('latestMessage') + '</div>';
+    document.querySelector('[data-role=user-container]').appendChild(row);
+    user.on('change', function () {
+        row.innerHTML = '<small class="pull-right"><em>'
+            + user.get('latestMessageTime').fromNow()
+            + '</em></small>'
+            + user.id
+            + '<div>' + user.get('latestMessage') + '</div>';
+    });
 });
 
 function getMessages() {
@@ -30,35 +50,19 @@ function getMessages() {
         }));
 }
 
-function listUsers(callback) {
+function getUsers() {
     request('http://localhost:13333/users')
         .on('error', function (err) {
             throw err; // TODO
         })
-        .on('end', function () {
-            if (typeof callback === 'function') {
-                callback();
-            }
-        })
         .pipe(concat(function (data) {
-            var sessions = JSON.parse(data);
-            sessions.forEach(function (session) {
-                var row = document.createElement('div');
-                row.className = 'user pull-right';
-                row.innerHTML = '<small><em>'
-                    + session.value
-                    + '</em></small>';
-                document.querySelector('[data-role=user-container]').appendChild(row);
-                row = document.createElement('div');
-                row.className = 'user';
-                row.innerHTML = session.key;
-                document.querySelector('[data-role=user-container]').appendChild(row);
-
-            })
+            // TODO: data is an empty array when the backend can't be reached, wtf?
+            users.add(JSON.parse(data), { parse: true, merge: true });
         }));
 }
 
-listUsers();
+getUsers();
+setInterval(getUsers, 500); // TODO: socket.io
 getMessages();
 setInterval(getMessages, 500); // TODO: socket.io
 
