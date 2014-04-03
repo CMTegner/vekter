@@ -11,6 +11,9 @@
 .user {
     display: block;
     padding: 10px 0;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
 }
 
 .messages {

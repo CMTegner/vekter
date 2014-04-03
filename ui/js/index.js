@@ -108,11 +108,12 @@ function selectUser(user) {
     input.value = user;
     document.querySelector('textarea').focus();
     messages.reset();
-    getMessages(user);
+    // TODO: Abort pending request
     clearInterval(mid);
     mid = setInterval(function () {
         getMessages(user)
     }, 500); // TODO: socket.io
+    getMessages(user);
 }
 
 document.forms[0].addEventListener('submit', function (event) {
