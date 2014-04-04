@@ -1,4 +1,5 @@
 var url = require('url');
+var _last = require('lodash.last');
 var request = require('hyperquest');
 var concat = require('concat-stream');
 var MessageCollection = require('./collections/Message.js');
@@ -11,8 +12,12 @@ var users = new UserCollection();
 var mid;
 var uri = url.parse(location.href);
 var host = uri.protocol + '//' + uri.hostname + ':' + uri.port;
+var messageLimit = 20;
 
 messages.on('add', function (message) {
+    while (messages.length > messageLimit) {
+        messages.shift();
+    }
     var row = document.createElement('div');
     row.innerHTML = '<small><em>'
         + message.get('time').fromNow()
@@ -20,6 +25,9 @@ messages.on('add', function (message) {
         + message.get('message')
         + '<br>';
     document.querySelector('[data-role=message-container]').appendChild(row);
+    message.on('remove', function () {
+        document.querySelector('[data-role=message-container]').removeChild(row);
+    });
 });
 
 messages.on('reset', function () {
@@ -60,7 +68,8 @@ function getMessages(user) {
         })
         .pipe(concat(function (data) {
             // TODO: data is an empty array when the backend can't be reached, wtf?
-            messages.add(JSON.parse(data), { parse: true });
+            var msg = _last(JSON.parse(data), messageLimit);
+            messages.add(msg, { parse: true });
         }));
 }
 

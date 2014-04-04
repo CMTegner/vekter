@@ -32,7 +32,8 @@
     "concat-stream": "^1.4.4",
     "browserify": "^3.38.0",
     "backbone": "^1.1.2",
-    "moment": "^2.5.1"
+    "moment": "^2.5.1",
+    "lodash.last": "^2.4.1"
   },
   "devDependencies": {
     "nodemon": "^1.0.17"
