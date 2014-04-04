@@ -8,3 +8,7 @@
 * JSHint + JSCS
 * Proper views (überplate)
 * Add 'limit' option to /messages
+* File input > select image > upload to imgur > paste link to recipient
+* Linkify links
+* Wrap text
+* Read server:port, user/nick, auth u/pw from config.json
