@@ -128,9 +128,12 @@ function selectUser(user) {
 document.forms[0].addEventListener('submit', function (event) {
     event.preventDefault();
     var input = document.querySelector('input');
-    var user = input.value;
+    var user = input.value.trim();
     var textarea = document.querySelector('textarea');
-    var message = textarea.value;
+    var message = textarea.value.trim();
+    if (!user || !message) {
+        return;
+    }
     var opts = {
         headers: {
             'Content-Type': 'application/json'
