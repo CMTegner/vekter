@@ -25,7 +25,11 @@ messages.on('add', function (message) {
         + message.get('message')
         + '<br>';
     document.querySelector('[data-role=message-container]').appendChild(row);
+    var t = setInterval(function () {
+        row.querySelector('em').innerText = message.get('time').fromNow();
+    }, 1000);
     message.on('remove', function () {
+        clearInterval(t);
         document.querySelector('[data-role=message-container]').removeChild(row);
     });
 });
