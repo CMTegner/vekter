@@ -7,8 +7,8 @@
     "validate": "jshint",
     "test": "exit 1",
     "build": "browserify ui/js/index.js > ui/js/bundle.js",
-    "dev": "nodemon bin/server.js 13333 .users .messages",
-    "start": "node bin/server.js 13333 .users .messages"
+    "dev": "nodemon bin/server.js --port 13333 .users .messages",
+    "start": "node bin/server.js --port 13333 .users .messages"
   },
   "repository": {
     "type": "git",
@@ -33,7 +33,8 @@
     "browserify": "^3.38.0",
     "backbone": "^1.1.2",
     "moment": "^2.5.1",
-    "lodash.last": "^2.4.1"
+    "lodash.last": "^2.4.1",
+    "nomnom": "^1.6.2"
   },
   "devDependencies": {
     "nodemon": "^1.0.17"
