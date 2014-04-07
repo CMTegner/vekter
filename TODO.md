@@ -15,3 +15,8 @@
 * Read server:port, user/nick, auth u/pw from config.json
 * Add /date API to be able to sync client/server time
 * Notification(s) on message (audio bell, favico, message highlight/marker)
+
+#Blockers for v0.1
+* Clean up dependencies + devDependencies (+ decide whether or not to commit bundle.js)
+* Tests
+* Static code analysis (JSHint, JSCS, coverage?)
