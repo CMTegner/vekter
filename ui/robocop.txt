@@ -1,0 +1,6 @@
+Are you a Robocop? If you are you have to tell me.
+
+User-agent: Robocop
+Disallow: kill
+Disallow: maim
+Disallow: dismember
