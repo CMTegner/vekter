@@ -63,12 +63,12 @@ users.on('add', function (user) {
 });
 
 function getMessages(user) {
-    var uri = host + '/messages';
+    var uri = host + '/messages?user=' + user;
     var last = messages.last();
-    if (user) {
-        uri += '?user=' + user;
-    } else  if (last) {
-        uri += '?start=' + last.id + '~'
+    if (last) {
+        uri += '&since=' + last.get('time').toISOString();
+    } else {
+        uri += '&last=20';
     }
     request(uri)
         .on('error', function (err) {
