@@ -13,6 +13,7 @@ var mid;
 var uri = url.parse(location.href);
 var host = uri.protocol + '//' + uri.hostname + ':' + uri.port;
 var messageLimit = 20;
+var selectedUser;
 
 messages.on('add', function (message) {
     while (messages.length > messageLimit) {
@@ -56,6 +57,9 @@ users.on('add', function (user) {
             + '<div>' + user.get('latestMessage') + '</div>';
     });
     row.addEventListener('click', onUserClick);
+    if (!selectedUser) {
+        selectUser(user.id);
+    }
 });
 
 function getMessages(user) {
@@ -77,7 +81,7 @@ function getMessages(user) {
         }));
 }
 
-function getUsers(callback) {
+function getUsers() {
     request(host + '/users')
         .on('error', function (err) {
             throw err; // TODO
@@ -85,19 +89,10 @@ function getUsers(callback) {
         .pipe(concat(function (data) {
             // TODO: data is an empty array when the backend can't be reached, wtf?
             users.add(JSON.parse(data), { parse: true, merge: true });
-            if (callback) {
-                callback();
-            }
         }));
 }
 
-getUsers(function () {
-    var user = users.first();
-    if (user) {
-        selectUser(user.id);
-    }
-    setInterval(getUsers, 500); // TODO: socket.io
-});
+setInterval(getUsers, 500); // TODO: socket.io
 
 document.querySelector('[data-role=new-pm]').addEventListener('click', function (event) {
     event.preventDefault();
@@ -116,6 +111,7 @@ function onUserClick(event) {
 }
 
 function selectUser(user) {
+    selectedUser = user;
     var input = document.querySelector('input');
     input.style.display = 'none';
     input.value = user;
@@ -151,6 +147,9 @@ document.forms[0].addEventListener('submit', function (event) {
         .on('end', function () {
             textarea.value = '';
             textarea.focus();
+            if (!selectedUser) {
+                selectUser(user);
+            }
         })
         .end(JSON.stringify({
             user: user,
