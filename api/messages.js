@@ -1,15 +1,19 @@
 module.exports = function (messages) {
     return function (request, reply) {
-        var opts = {};
-        if (request.query.user) {
-            opts.start = request.query.user + '☃';
-            opts.end  = request.query.user + '☃~';
+        var options = {};
+        var user = request.query.user;
+        if (!user) {
+            reply('Missing user').code(400);
+            return;
         }
-        if (request.query.start) {
-            opts.start = request.query.start;
+        options.start = user + '☃';
+        options.end = options.start + '~';
+        var since = request.query.since;
+        if (since) {
+            options.start += since;
         }
         var data = [];
-        messages.createReadStream(opts)
+        messages.createReadStream(options)
             // TODO: concat-json-stream
             .on('data', function (chunk) {
                 var tokens = chunk.key.split('☃'); // TODO
