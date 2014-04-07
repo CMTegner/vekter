@@ -9,8 +9,19 @@ module.exports = function (messages) {
         options.start = user + '☃';
         options.end = options.start + '~';
         var since = request.query.since;
+        var last = request.query.last;
+        if (since && last) {
+            reply('Specify either since or last').code(400);
+            return;
+        }
         if (since) {
             options.start += since;
+        }
+        if (last) {
+            options.reverse = true;
+            options.limit = parseInt(last, 10);
+            options.start = require('./create-key.js')(user);
+            options.end = user + '☃';
         }
         var data = [];
         messages.createReadStream(options)
@@ -26,6 +37,9 @@ module.exports = function (messages) {
                 data.push(message);
             })
             .on('end', function () {
+                if (options.reverse) {
+                    data.reverse();
+                }
                 reply(data);
             })
             .on('error', function () {
