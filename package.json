@@ -7,8 +7,8 @@
     "validate": "jshint",
     "test": "exit 1",
     "build": "browserify ui/js/index.js > ui/js/bundle.js",
-    "dev": "nodemon bin/server.js --port 13333 .users .messages",
-    "start": "node bin/server.js --port 13333 .users .messages"
+    "dev": "nodemon bin/server.js --port 13333",
+    "start": "node bin/server.js --port 13333"
   },
   "repository": {
     "type": "git",
@@ -34,6 +34,8 @@
     "backbone": "^1.1.2",
     "moment": "^2.5.1",
     "lodash.last": "^2.4.1",
+    "mkdirp": "^0.3.5",
+    "home-dir": "^0.1.2",
     "nomnom": "^1.6.2"
   },
   "devDependencies": {
