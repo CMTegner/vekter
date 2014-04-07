@@ -48,7 +48,8 @@ if (args.user) {
     };
     read(opts, function(err, secret) {
         if (err) {
-            throw err;
+            console.log(); // Make sure next prompt is on a new line
+            process.exit(1);
         }
         setup(secret);
     });
