@@ -67,7 +67,7 @@ function setup(secret) {
 
     var Client = require('irc').Client;
     var client = new Client(args.server, args.nick);
-    client.addListener('registered', function() {
+    client.on('registered', function() {
         console.log('Connected to %s as %s', args.server, args.nick);
 
         var hash = secret && bcrypt.hashSync(secret, 10);

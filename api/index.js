@@ -1,7 +1,7 @@
 var createKey = require('./create-key.js');
 
 module.exports = function (client, users, messages) {
-    client.addListener('pm', function (from, message) {
+    client.on('pm', function (from, message) {
         from = from.toLowerCase();
         var data = {
             latestMessage: message,
@@ -21,7 +21,7 @@ module.exports = function (client, users, messages) {
         });
     });
 
-    client.addListener('error', function (err) {
+    client.on('error', function (err) {
         console.error(err);
     });
 
