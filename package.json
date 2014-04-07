@@ -7,8 +7,8 @@
     "validate": "jshint",
     "test": "exit 1",
     "build": "browserify ui/js/index.js > ui/js/bundle.js",
-    "dev": "nodemon bin/server.js --port 13333",
-    "start": "node bin/server.js --port 13333"
+    "dev": "nodemon bin/server.js --port 13333 irc.freenode.net web-bnc",
+    "start": "node bin/server.js --port 13333 irc.freenode.net web-bnc"
   },
   "repository": {
     "type": "git",

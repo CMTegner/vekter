@@ -14,6 +14,16 @@ var args = require("nomnom")
         default: '~/.web-bnc',
         help: 'Path to web-bnc home directory'
     })
+    .option('server', {
+        position: 0,
+        required: true,
+        help: 'The IRC server to connect to'
+    })
+    .option('nick', {
+        position: 1,
+        required: true,
+        help: 'The nick to use when connecting to the IRC server'
+    })
     .option('version', {
         flag: true,
         help: 'Print version and exit',
@@ -35,7 +45,7 @@ var users = level(dir + '/users', {
 var messages = level(dir + '/messages');
 
 var Client = require('irc').Client;
-var client = new Client('open.ircnet.net', 'christianBNC');
+var client = new Client(args.server, args.nick);
 
 var server = require('../')(client, users, messages, args.port);
 
