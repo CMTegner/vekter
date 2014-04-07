@@ -12,3 +12,4 @@
 * Linkify links
 * Wrap text
 * Read server:port, user/nick, auth u/pw from config.json
+* Add /date API to be able to sync client/server time
