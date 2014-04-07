@@ -25,11 +25,6 @@ module.exports = function (client, users, messages) {
         console.error(err);
     });
 
-    client.addListener('registered', function () {
-        // TODO: Should not allow sending messages until connection is established
-        console.log('connected');
-    });
-
     return {
         users: require('./users.js')(users),
         messages: require('./messages.js')(messages),
