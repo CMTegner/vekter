@@ -15,7 +15,7 @@ module.exports = function (messages) {
             return;
         }
         if (since) {
-            options.start += since;
+            options.start += since + '~';
         }
         if (last) {
             options.reverse = true;

@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "validate": "jshint",
-    "test": "exit 1",
+    "test": "tape test/*.js",
     "build": "browserify ui/js/index.js > ui/js/bundle.js",
     "dev": "nodemon bin/server.js --port 13333 irc.freenode.net web-bnc",
     "start": "node bin/server.js --port 13333 irc.freenode.net web-bnc"

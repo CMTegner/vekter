@@ -122,7 +122,7 @@ test('GET /messages (user and since)', function (t) {
     messages.put(key3, 'test');
     messages.put(createKey('lisa'), 'golly gosh');
 
-    var since = key2.split('☃')[1];
+    var since = key1.split('☃')[1];
     request(uri + '/messages?user=christian&since=' + since, function (err, response, body) {
         t.ok(err === null, 'should not err');
         t.equal(response.statusCode, 200, 'should return \'OK\'');
@@ -143,6 +143,34 @@ test('GET /messages (user and since)', function (t) {
     });
 });
 
+test('GET /messages (since equal to last message)', function (t) {
+    t.plan(4);
+
+    var millis = new Date().getTime();
+    function createKey(user) {
+        return user + '☃' + new Date(millis++).toISOString();
+    }
+
+    var key1 = createKey('christian');
+    messages.put(key1, 'foo bar 42');
+    var key2 = createKey('christian');
+    messages.put(key2, 'boom bang');
+    messages.put(createKey('john'), 'beep boop');
+    messages.put(createKey('john'), 'hello world');
+    var key3 = createKey('christian');
+    messages.put(key3, 'test');
+    messages.put(createKey('lisa'), 'golly gosh');
+
+    var since = key3.split('☃')[1];
+    request(uri + '/messages?user=christian&since=' + since, function (err, response, body) {
+        t.ok(err === null, 'should not err');
+        t.equal(response.statusCode, 200, 'should return \'OK\'');
+        var msgs = JSON.parse(body);
+        t.equal(msgs.length, 0, 'should return 0 messages');
+        t.deepEqual(msgs, []);
+        empty(messages);
+    });
+});
 
 test('GET /messages (since later than newest message)', function (t) {
     t.plan(4);
