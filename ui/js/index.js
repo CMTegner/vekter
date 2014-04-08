@@ -29,7 +29,7 @@ messages.on('add', function (message) {
     var t = setInterval(function () {
         row.querySelector('em').innerText = message.get('time').fromNow();
     }, 1000);
-    message.on('remove', function () {
+    message.once('remove', function () {
         clearInterval(t);
         document.querySelector('[data-role=message-container]').removeChild(row);
     });
