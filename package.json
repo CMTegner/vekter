@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "description": "IRC BNC with a web UI",
   "main": "index.js",
+  "preferGlobal": true,
   "scripts": {
     "validate": "jshint",
     "test": "tape test/*.js",
