@@ -14,8 +14,8 @@ var args = require("nomnom")
     })
     .option('directory', {
         abbr: 'd',
-        default: '~/.web-bnc',
-        help: 'Path to web-bnc home directory'
+        default: '~/.vekter',
+        help: 'Path to vekter home directory'
     })
     .option('user', {
         abbr: 'u',

@@ -1,18 +1,22 @@
 {
-  "name": "web-bnc",
-  "version": "0.0.0",
-  "description": "BNC with a web UI",
+  "name": "vekter",
+  "version": "0.0.1",
+  "description": "IRC BNC with a web UI",
   "main": "index.js",
   "scripts": {
     "validate": "jshint",
     "test": "tape test/*.js",
     "build": "browserify ui/js/index.js > ui/js/bundle.js",
-    "dev": "nodemon bin/server.js --port 13333 irc.freenode.net web-bnc",
-    "start": "node bin/server.js --port 13333 irc.freenode.net web-bnc"
+    "prepublish": "npm run build",
+    "dev": "nodemon bin/server.js --port 13333 irc.freenode.net vekter",
+    "start": "node bin/server.js --port 13333 irc.freenode.net vekter"
+  },
+  "bin": {
+    "vekter": "bin/server.js"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/CMTegner/web-bnc"
+    "url": "https://github.com/CMTegner/vekter"
   },
   "keywords": [
     "irc",
@@ -21,16 +25,15 @@
   "author": "Christian Maughan Tegner",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/CMTegner/web-bnc/issues"
+    "url": "https://github.com/CMTegner/vekter/issues"
   },
-  "homepage": "https://github.com/CMTegner/web-bnc",
+  "homepage": "https://github.com/CMTegner/vekter",
   "dependencies": {
     "irc": "^0.3.6",
     "level": "^0.18.0",
     "hapi": "^3.1.0",
     "hyperquest": "^0.3.0",
     "concat-stream": "^1.4.4",
-    "browserify": "^3.38.0",
     "backbone": "^1.1.2",
     "moment": "^2.5.1",
     "lodash.last": "^2.4.1",
@@ -42,6 +45,7 @@
     "read": "^1.0.5"
   },
   "devDependencies": {
+    "browserify": "^3.38.0",
     "nodemon": "^1.0.17",
     "memdown": "^0.7.0",
     "levelup": "^0.18.2",
