@@ -15,7 +15,11 @@ var api = require('./api/index.js');
  */
 module.exports = function (options) {
     var a = api(options.client, options.users, options.messages);
-    var server = hapi.createServer(options.port || 0);
+    var server = hapi.createServer(options.port || 0, {
+        files: {
+            relativeTo: __dirname
+        }
+    });
 
     function setup(auth) {
         // UI
