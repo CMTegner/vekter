@@ -12,8 +12,10 @@
 * Linkify links
 * Wrap text
 * Add /date API to be able to sync client/server time
-* Notification(s) on message (audio bell, favico, message highlight/marker)
+* Notification(s) on message (audio bell, change favico, message highlight/marker on unread)
 * Add proper logging
+* Update user timestamp periodically
+* favico
 
 #Blockers for v0.1
 * Clean up dependencies + devDependencies (+ decide whether or not to commit bundle.js)
