@@ -20,6 +20,11 @@
     border-bottom: none;
 }
 
+.messages > div {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
 .say {
     border-top: none;
 }
