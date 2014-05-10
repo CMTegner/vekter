@@ -5,23 +5,26 @@ var memdown = require('memdown');
 var request = require('request');
 var api = require('../');
 
-var users, messages, server, uri;
+var users;
+var messages;
+var server;
+var uri;
 
 function empty(db) {
     var batch = [];
     db.createReadStream()
-        .on('data', function (entry) {
+        .on('data', function(entry) {
             batch.push({
                 type: 'del',
                 key: entry.key
             });
         })
-        .on('end', function () {
+        .on('end', function() {
             db.batch(batch);
         });
 }
 
-test('setup', function (t) {
+test('setup', function(t) {
     t.plan(1);
 
     users = levelup({
@@ -34,34 +37,34 @@ test('setup', function (t) {
         users: users,
         messages: messages
     });
-    server.start(function () {
+    server.start(function() {
         var port = server.info.port;
         uri = 'http://localhost:' + port;
         t.pass('setup: server should start');
     });
 });
 
-test('GET /messages (no user)', function (t) {
+test('GET /messages (no user)', function(t) {
     t.plan(3);
 
-    request(uri + '/messages', function (err, response, body) {
+    request(uri + '/messages', function(err, response, body) {
         t.ok(err === null, 'should not err');
         t.equal(response.statusCode, 400, 'should result in a \'bad request\'');
         t.equal(body, 'Missing user');
     });
 });
 
-test('GET /messages (empty db)', function (t) {
+test('GET /messages (empty db)', function(t) {
     t.plan(3);
 
-    request(uri + '/messages?user=foo', function (err, response, body) {
+    request(uri + '/messages?user=foo', function(err, response, body) {
         t.ok(err === null, 'should not err');
         t.equal(response.statusCode, 200, 'should return \'OK\'');
         t.deepEqual(JSON.parse(body), []);
     });
 });
 
-test('GET /messages (user only)', function (t) {
+test('GET /messages (user only)', function(t) {
     t.plan(4);
 
     var millis = new Date().getTime();
@@ -79,7 +82,7 @@ test('GET /messages (user only)', function (t) {
     messages.put(key3, 'test');
     messages.put(createKey('lisa'), 'golly gosh');
 
-    request(uri + '/messages?user=christian', function (err, response, body) {
+    request(uri + '/messages?user=christian', function(err, response, body) {
         t.ok(err === null, 'should not err');
         t.equal(response.statusCode, 200, 'should return \'OK\'');
         var msgs = JSON.parse(body);
@@ -104,7 +107,7 @@ test('GET /messages (user only)', function (t) {
     });
 });
 
-test('GET /messages (user and since)', function (t) {
+test('GET /messages (user and since)', function(t) {
     t.plan(4);
 
     var millis = new Date().getTime();
@@ -123,7 +126,7 @@ test('GET /messages (user and since)', function (t) {
     messages.put(createKey('lisa'), 'golly gosh');
 
     var since = key1.split('☃')[1];
-    request(uri + '/messages?user=christian&since=' + since, function (err, response, body) {
+    request(uri + '/messages?user=christian&since=' + since, function(err, response, body) {
         t.ok(err === null, 'should not err');
         t.equal(response.statusCode, 200, 'should return \'OK\'');
         var msgs = JSON.parse(body);
@@ -143,7 +146,7 @@ test('GET /messages (user and since)', function (t) {
     });
 });
 
-test('GET /messages (since equal to last message)', function (t) {
+test('GET /messages (since equal to last message)', function(t) {
     t.plan(4);
 
     var millis = new Date().getTime();
@@ -162,7 +165,7 @@ test('GET /messages (since equal to last message)', function (t) {
     messages.put(createKey('lisa'), 'golly gosh');
 
     var since = key3.split('☃')[1];
-    request(uri + '/messages?user=christian&since=' + since, function (err, response, body) {
+    request(uri + '/messages?user=christian&since=' + since, function(err, response, body) {
         t.ok(err === null, 'should not err');
         t.equal(response.statusCode, 200, 'should return \'OK\'');
         var msgs = JSON.parse(body);
@@ -172,7 +175,7 @@ test('GET /messages (since equal to last message)', function (t) {
     });
 });
 
-test('GET /messages (since later than newest message)', function (t) {
+test('GET /messages (since later than newest message)', function(t) {
     t.plan(4);
 
     var millis = new Date().getTime();
@@ -191,7 +194,7 @@ test('GET /messages (since later than newest message)', function (t) {
     messages.put(createKey('lisa'), 'golly gosh');
 
     var since = new Date(millis++).toISOString();
-    request(uri + '/messages?user=christian&since=' + since, function (err, response, body) {
+    request(uri + '/messages?user=christian&since=' + since, function(err, response, body) {
         t.ok(err === null, 'should not err');
         t.equal(response.statusCode, 200, 'should return \'OK\'');
         var msgs = JSON.parse(body);
@@ -201,7 +204,7 @@ test('GET /messages (since later than newest message)', function (t) {
     });
 });
 
-test('GET /messages (last)', function (t) {
+test('GET /messages (last)', function(t) {
     t.plan(4);
 
     var millis = new Date().getTime() - 100;
@@ -219,7 +222,7 @@ test('GET /messages (last)', function (t) {
     messages.put(key3, 'test');
     messages.put(createKey('lisa'), 'golly gosh');
 
-    request(uri + '/messages?user=christian&last=2', function (err, response, body) {
+    request(uri + '/messages?user=christian&last=2', function(err, response, body) {
         t.ok(err === null, 'should not err');
         t.equal(response.statusCode, 200, 'should return \'OK\'');
         var msgs = JSON.parse(body);
@@ -239,20 +242,20 @@ test('GET /messages (last)', function (t) {
     });
 });
 
-test('GET /messages (since and last)', function (t) {
+test('GET /messages (since and last)', function(t) {
     t.plan(3);
 
-    request(uri + '/messages?user=christian&last=foo&since=bar', function (err, response, body) {
+    request(uri + '/messages?user=christian&last=foo&since=bar', function(err, response, body) {
         t.ok(err === null, 'should not err');
         t.equal(response.statusCode, 400, 'should result in a \'bad request\'');
         t.equal(body, 'Specify either since or last');
     });
 });
 
-test('teardown', function (t) {
+test('teardown', function(t) {
     t.plan(1);
 
-    server.stop(function () {
+    server.stop(function() {
         t.pass('teardown: server should stop');
     });
 });

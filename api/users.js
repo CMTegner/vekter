@@ -1,9 +1,9 @@
-module.exports = function (users) {
-    return function (request, reply) {
+module.exports = function(users) {
+    return function(request, reply) {
         var data = [];
         users.createReadStream()
             // TODO: concat-json-stream
-            .on('data', function (chunk) {
+            .on('data', function(chunk) {
                 var user = {
                     id: chunk.key,
                     latestMessageTime: chunk.value.latestMessageTime,
@@ -11,10 +11,10 @@ module.exports = function (users) {
                 };
                 data.push(user);
             })
-            .on('end', function () {
+            .on('end', function() {
                 reply(data);
             })
-            .on('error', function () {
+            .on('error', function() {
                 reply('Error reading users from db').code(500);
             }); // TODO: Code coverage
     };

@@ -10,7 +10,7 @@ module.exports = Model.extend({
         message: undefined // String
     },
 
-    parse: function (data) {
+    parse: function(data) {
         data.time = moment(data.time);
         return data;
     }

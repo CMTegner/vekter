@@ -42,23 +42,23 @@ var foo = ornament(require('../templates/app.json'), {
 });
 document.body.appendChild(foo.children[0]);
 
-setInterval(function () {
-    messages.forEach(function (message) {
+setInterval(function() {
+    messages.forEach(function(message) {
         message.set('fromNow', message.get('time').fromNow());
     });
-    users.forEach(function (user) {
+    users.forEach(function(user) {
         var fromNow = user.get('latestMessageTime').fromNow();
         user.set('latestMessageTimeFromNow', fromNow);
     });
 }, 1000);
 
-messages.on('add', function () {
+messages.on('add', function() {
     while (messages.length > messageLimit) {
         messages.shift();
     }
 });
 
-users.on('add', function (user) {
+users.on('add', function(user) {
     // TODO
     // row.addEventListener('click', onUserClick);
     if (!selectedUser) {
@@ -75,10 +75,10 @@ function getMessages(user) {
         uri += '&last=20';
     }
     request(uri)
-        .on('error', function (err) {
+        .on('error', function(err) {
             throw err; // TODO
         })
-        .pipe(concat(function (data) {
+        .pipe(concat(function(data) {
             // TODO: data is an empty array when the backend can't be reached, wtf?
             var msg = _last(JSON.parse(data), messageLimit);
             messages.add(msg, { parse: true });
@@ -87,10 +87,10 @@ function getMessages(user) {
 
 function getUsers() {
     request(host + '/users')
-        .on('error', function (err) {
+        .on('error', function(err) {
             throw err; // TODO
         })
-        .pipe(concat(function (data) {
+        .pipe(concat(function(data) {
             // TODO: data is an empty array when the backend can't be reached, wtf?
             users.add(JSON.parse(data), { parse: true, merge: true });
         }));
@@ -98,7 +98,7 @@ function getUsers() {
 
 setInterval(getUsers, 500); // TODO: socket.io
 
-document.querySelector('[data-role=new-pm]').addEventListener('click', function (event) {
+document.querySelector('[data-role=new-pm]').addEventListener('click', function(event) {
     event.preventDefault();
     event.stopPropagation();
     clearInterval(mid);
@@ -123,13 +123,13 @@ function selectUser(user) {
     messages.reset();
     // TODO: Abort pending request
     clearInterval(mid);
-    mid = setInterval(function () {
+    mid = setInterval(function() {
         getMessages(user);
     }, 500); // TODO: socket.io
     getMessages(user);
 }
 
-document.forms[0].addEventListener('submit', function (event) {
+document.forms[0].addEventListener('submit', function(event) {
     event.preventDefault();
     var input = document.querySelector('input');
     var user = input.value.trim();
@@ -145,10 +145,10 @@ document.forms[0].addEventListener('submit', function (event) {
         method: 'POST'
     };
     request(host + '/say', opts)
-        .on('error', function (err) {
+        .on('error', function(err) {
             throw err; // TODO
         })
-        .on('end', function () {
+        .on('end', function() {
             textarea.value = '';
             textarea.focus();
             if (!selectedUser) {

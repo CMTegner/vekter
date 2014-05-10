@@ -1,3 +1,3 @@
-module.exports = function (user) {
+module.exports = function(user) {
     return user + '☃' + new Date().toISOString();
 };

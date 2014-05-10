@@ -9,7 +9,7 @@ module.exports = Model.extend({
         latestMessage: undefined // String
     },
 
-    parse: function (data) {
+    parse: function(data) {
         data.latestMessageTime = moment(data.latestMessageTime);
         return data;
     }

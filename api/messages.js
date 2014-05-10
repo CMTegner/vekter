@@ -1,5 +1,5 @@
-module.exports = function (messages) {
-    return function (request, reply) {
+module.exports = function(messages) {
+    return function(request, reply) {
         var options = {};
         var user = request.query.user;
         if (!user) {
@@ -26,7 +26,7 @@ module.exports = function (messages) {
         var data = [];
         messages.createReadStream(options)
             // TODO: concat-json-stream
-            .on('data', function (chunk) {
+            .on('data', function(chunk) {
                 var tokens = chunk.key.split('☃'); // TODO
                 var message = {
                     id: chunk.key,
@@ -36,13 +36,13 @@ module.exports = function (messages) {
                 };
                 data.push(message);
             })
-            .on('end', function () {
+            .on('end', function() {
                 if (options.reverse) {
                     data.reverse();
                 }
                 reply(data);
             })
-            .on('error', function () {
+            .on('error', function() {
                 reply('Error reading messages from db').code(500);
             }); // TODO: Code coverage
     };

@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-
 var path = require('path');
 var mkdir = require('mkdirp');
 var read = require('read');
@@ -80,7 +79,7 @@ function setup(secret) {
             options.password = bcrypt.hashSync(secret, 10);
         }
         var srv = server(options);
-        srv.start(function () {
+        srv.start(function() {
             console.log('Service running on http://%s:%s', srv.info.host, srv.info.port);
         });
     });

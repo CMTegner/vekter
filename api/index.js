@@ -1,19 +1,19 @@
 var createKey = require('./create-key.js');
 
-module.exports = function (client, users, messages) {
-    client.on('pm', function (from, message) {
+module.exports = function(client, users, messages) {
+    client.on('pm', function(from, message) {
         from = from.toLowerCase();
         var data = {
             latestMessage: message,
             latestMessageTime: new Date().toISOString()
         };
-        users.put(from, data, function (err) {
+        users.put(from, data, function(err) {
             if (err) {
                 console.error('Error while storing user', err);
                 return;
             }
             var key = createKey(from);
-            messages.put(key, message, function (err) {
+            messages.put(key, message, function(err) {
                 if (err) {
                     console.error('Error while storing incoming message', err);
                 }
@@ -21,7 +21,7 @@ module.exports = function (client, users, messages) {
         });
     });
 
-    client.on('error', function (err) {
+    client.on('error', function(err) {
         console.error(err);
     });
 

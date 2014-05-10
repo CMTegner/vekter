@@ -13,7 +13,7 @@ var api = require('./api/index.js');
  * @param {Number} [options.port] the server's port, an ephemeral port will be picked if non is specified
  * @returns {hapi.Server} the hapi server object, ready to be started
  */
-module.exports = function (options) {
+module.exports = function(options) {
     var a = api(options.client, options.users, options.messages);
     var server = hapi.createServer(options.port || 0, {
         files: {
@@ -57,12 +57,12 @@ module.exports = function (options) {
     }
 
     if (options.username) {
-        server.pack.require('hapi-auth-basic', function () {
-            var validate = function (username, password, callback) {
+        server.pack.require('hapi-auth-basic', function() {
+            var validate = function(username, password, callback) {
                 if (username !== options.username) {
                     return callback(null, false);
                 }
-                bcrypt.compare(password, options.password, function (err, isValid) {
+                bcrypt.compare(password, options.password, function(err, isValid) {
                     callback(err, isValid, {});
                 });
             };
