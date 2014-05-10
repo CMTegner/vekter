@@ -1,10 +1,22 @@
 <div class="container">
     <div class="row">
-        <div class="users col-lg-offset-2 col-lg-3 col-md-offset-1 col-md-4 col-sm-5"
-             data-role="user-container">
+        <div class="users col-lg-offset-2 col-lg-3 col-md-offset-1 col-md-4 col-sm-5">
             <a href="#" class="user" data-role="new-pm">
                 + Message User
             </a>
+            <div repeat="users"
+                 class="user"
+                 data-user="{{name}}">
+                <small class="pull-right">
+                    <em>
+                        {{latestMessageTimeFromNow}}
+                    </em>
+                </small>
+                {{id}}
+                <div>
+                    {{latestMessage}}
+                </div>
+            </div>
         </div>
         <div class="messages col-lg-5 col-md-6 col-sm-7">
             <div repeat="messages">

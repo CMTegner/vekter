@@ -37,6 +37,7 @@ ornament.settings = {
     }
 };
 var foo = ornament(require('../templates/app.json'), {
+    users: users,
     messages: messages
 });
 document.body.appendChild(foo.children[0]);
@@ -44,7 +45,11 @@ document.body.appendChild(foo.children[0]);
 setInterval(function () {
     messages.forEach(function (message) {
         message.set('fromNow', message.get('time').fromNow());
-    })
+    });
+    users.forEach(function (user) {
+        var fromNow = user.get('latestMessageTime').fromNow();
+        user.set('latestMessageTimeFromNow', fromNow);
+    });
 }, 1000);
 
 messages.on('add', function () {
@@ -54,23 +59,8 @@ messages.on('add', function () {
 });
 
 users.on('add', function (user) {
-    var row = document.createElement('div');
-    row.className = 'user';
-    row.setAttribute('data-user', user.id);
-    row.innerHTML = '<small class="pull-right"><em>'
-        + user.get('latestMessageTime').fromNow()
-        + '</em></small>'
-        + user.id
-        + '<div>' + user.get('latestMessage') + '</div>';
-    document.querySelector('[data-role=user-container]').appendChild(row);
-    user.on('change', function () {
-        row.innerHTML = '<small class="pull-right"><em>'
-            + user.get('latestMessageTime').fromNow()
-            + '</em></small>'
-            + user.id
-            + '<div>' + user.get('latestMessage') + '</div>';
-    });
-    row.addEventListener('click', onUserClick);
+    // TODO
+    // row.addEventListener('click', onUserClick);
     if (!selectedUser) {
         selectUser(user.id);
     }
