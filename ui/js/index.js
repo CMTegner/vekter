@@ -2,6 +2,7 @@ var url = require('url');
 var _last = require('lodash.last');
 var request = require('hyperquest');
 var concat = require('concat-stream');
+var ornament = require('ornament/runtime');
 var MessageCollection = require('./collections/Message.js');
 var UserCollection = require('./collections/User.js');
 
@@ -15,28 +16,45 @@ var host = uri.protocol + '//' + uri.hostname + ':' + uri.port;
 var messageLimit = 20;
 var selectedUser;
 
-messages.on('add', function (message) {
+ornament.settings = {
+    inject: require('ornament/binding-backbone.js').read,
+    listen: require('ornament/binding-backbone.js').listen,
+    collection: require('ornament/binding-backbone.js').collection,
+    listenToCollection: function listenToCollection(items, add, remove) {
+        // TODO: sort
+        items.on('add', function(item) {
+            var index = items.models.indexOf(item);
+            add(item, index);
+        });
+        items.on('remove', function(item, collection, options) {
+            remove(item, options.index);
+        });
+        items.on('reset', function(collection, options) {
+            for (var i = options.previousModels.length - 1; i > -1; i--) {
+                remove(options.previousModels[i]);
+            }
+        });
+    }
+};
+var foo = ornament(require('../templates/messages.json'), {
+    messages: messages
+});
+var mc = document.querySelector('[data-role=message-container]');
+var kids = foo.childNodes;
+for (var i = 0; i < kids.length; i++) {
+    mc.appendChild(kids[i]);
+}
+
+setInterval(function () {
+    messages.forEach(function (message) {
+        message.set('fromNow', message.get('time').fromNow());
+    })
+}, 1000);
+
+messages.on('add', function () {
     while (messages.length > messageLimit) {
         messages.shift();
     }
-    var row = document.createElement('div');
-    row.innerHTML = '<small><em>'
-        + message.get('time').fromNow()
-        + '</em></small><br>'
-        + message.get('message')
-        + '<br>';
-    document.querySelector('[data-role=message-container]').appendChild(row);
-    var t = setInterval(function () {
-        row.querySelector('em').innerText = message.get('time').fromNow();
-    }, 1000);
-    message.once('remove', function () {
-        clearInterval(t);
-        document.querySelector('[data-role=message-container]').removeChild(row);
-    });
-});
-
-messages.on('reset', function () {
-    document.querySelector('[data-role=message-container]').innerHTML = '';
 });
 
 users.on('add', function (user) {

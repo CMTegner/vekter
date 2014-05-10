@@ -7,7 +7,9 @@
   "scripts": {
     "validate": "jshint",
     "test": "tape test/*.js",
-    "build": "browserify ui/js/index.js > ui/js/bundle.js",
+    "templates": "ornament ui/templates/messages.t -o ui/templates/messages.json",
+    "browserify": "browserify ui/js/index.js > ui/js/bundle.js",
+    "build": "npm run templates && npm run browserify",
     "prepublish": "npm run build",
     "dev": "nodemon bin/server.js --port 13333 irc.freenode.net vekter",
     "start": "node bin/server.js --port 13333 irc.freenode.net vekter"
@@ -43,7 +45,8 @@
     "nomnom": "^1.6.2",
     "hapi-auth-basic": "^1.0.1",
     "bcrypt": "^0.7.7",
-    "read": "^1.0.5"
+    "read": "^1.0.5",
+    "ornament": "git://github.com/ornament/ornament"
   },
   "devDependencies": {
     "browserify": "^3.38.0",
