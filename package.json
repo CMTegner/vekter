@@ -7,7 +7,8 @@
   "scripts": {
     "jshint": "jshint index.js api/*.js bin/*.js test/*.js ui/js/{*,**/*}.js",
     "jscs": "jscs index.js api bin test ui/js",
-    "test": "tape test/*.js",
+    "tape": "tape test/*.js",
+    "test": "npm run jshint && npm run jscs && npm run tape",
     "templates": "ornament ui/templates/app.t -o ui/templates/app.json",
     "browserify": "browserify ui/js/index.js > ui/js/bundle.js",
     "build": "npm run templates && npm run browserify",
