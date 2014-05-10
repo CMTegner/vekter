@@ -6,7 +6,7 @@ var read = require('read');
 var bcrypt = require('bcrypt');
 var level = require('level');
 var server = require('../index.js');
-var args = require("nomnom")
+var args = require('nomnom')
     .option('port', {
         abbr: 'p',
         default: 0,

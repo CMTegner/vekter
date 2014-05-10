@@ -109,10 +109,10 @@ document.querySelector('[data-role=new-pm]').addEventListener('click', function 
     input.focus();
 });
 
-function onUserClick(event) {
-    event.preventDefault();
-    selectUser(event.currentTarget.getAttribute('data-user'));
-}
+//function onUserClick(event) {
+//    event.preventDefault();
+//    selectUser(event.currentTarget.getAttribute('data-user'));
+//}
 
 function selectUser(user) {
     selectedUser = user;
@@ -124,7 +124,7 @@ function selectUser(user) {
     // TODO: Abort pending request
     clearInterval(mid);
     mid = setInterval(function () {
-        getMessages(user)
+        getMessages(user);
     }, 500); // TODO: socket.io
     getMessages(user);
 }
