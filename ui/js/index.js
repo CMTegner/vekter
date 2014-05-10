@@ -36,14 +36,10 @@ ornament.settings = {
         });
     }
 };
-var foo = ornament(require('../templates/messages.json'), {
+var foo = ornament(require('../templates/app.json'), {
     messages: messages
 });
-var mc = document.querySelector('[data-role=message-container]');
-var kids = foo.childNodes;
-for (var i = 0; i < kids.length; i++) {
-    mc.appendChild(kids[i]);
-}
+document.body.appendChild(foo.children[0]);
 
 setInterval(function () {
     messages.forEach(function (message) {

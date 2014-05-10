@@ -7,7 +7,7 @@
   "scripts": {
     "validate": "jshint",
     "test": "tape test/*.js",
-    "templates": "ornament ui/templates/messages.t -o ui/templates/messages.json",
+    "templates": "ornament ui/templates/app.t -o ui/templates/app.json",
     "browserify": "browserify ui/js/index.js > ui/js/bundle.js",
     "build": "npm run templates && npm run browserify",
     "prepublish": "npm run build",
