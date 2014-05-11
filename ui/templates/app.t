@@ -6,7 +6,7 @@
             </a>
             <div repeat="users"
                  class="user"
-                 data-user="{{name}}">
+                 data-user="{{id}}">
                 <small class="pull-right">
                     <em>
                         {{latestMessageTimeFromNow}}
