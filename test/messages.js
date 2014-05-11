@@ -239,6 +239,24 @@ test('GET /messages (since and last)', function(t) {
     });
 });
 
+test('GET /messages (fail)', function(t) {
+    var emitter = new Emitter();
+    var fn = messages.createReadStream;
+    messages.createReadStream = function() {
+        return emitter;
+    };
+    request(uri + '/messages?user=christian&last=10', function(err, response, body) {
+        messages.createReadStream = fn;
+        t.equal(err, null, 'should not err');
+        t.equal(response.statusCode, 500, 'should result in a \'internal server error\'');
+        t.equal(body, 'Error reading messages from db');
+        t.end();
+    });
+    setTimeout(function() {
+        emitter.emit('error');
+    }, 100);
+});
+
 test('teardown', function(t) {
     server.stop(function() {
         t.pass('teardown: server should stop');
