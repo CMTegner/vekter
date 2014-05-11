@@ -10,7 +10,7 @@ var messages;
 var server;
 var uri;
 
-function empty(db) {
+function empty(db, done) {
     var batch = [];
     db.createReadStream()
         .on('data', function(entry) {
@@ -21,12 +21,11 @@ function empty(db) {
         })
         .on('end', function() {
             db.batch(batch);
+            done();
         });
 }
 
 test('setup', function(t) {
-    t.plan(1);
-
     users = levelup({
         db: memdown,
         valueEncoding: 'json'
@@ -41,32 +40,29 @@ test('setup', function(t) {
         var port = server.info.port;
         uri = 'http://localhost:' + port;
         t.pass('setup: server should start');
+        t.end();
     });
 });
 
 test('GET /messages (no user)', function(t) {
-    t.plan(3);
-
     request(uri + '/messages', function(err, response, body) {
         t.ok(err === null, 'should not err');
         t.equal(response.statusCode, 400, 'should result in a \'bad request\'');
         t.equal(body, 'Missing user');
+        t.end();
     });
 });
 
 test('GET /messages (empty db)', function(t) {
-    t.plan(3);
-
     request(uri + '/messages?user=foo', function(err, response, body) {
         t.ok(err === null, 'should not err');
         t.equal(response.statusCode, 200, 'should return \'OK\'');
         t.deepEqual(JSON.parse(body), []);
+        t.end();
     });
 });
 
 test('GET /messages (user only)', function(t) {
-    t.plan(4);
-
     var millis = new Date().getTime();
     function createKey(user) {
         return user + '☃' + new Date(millis++).toISOString();
@@ -103,13 +99,11 @@ test('GET /messages (user only)', function(t) {
             time: key3.split('☃')[1],
             message: 'test'
         }]);
-        empty(messages);
+        empty(messages, t.end);
     });
 });
 
 test('GET /messages (user and since)', function(t) {
-    t.plan(4);
-
     var millis = new Date().getTime();
     function createKey(user) {
         return user + '☃' + new Date(millis++).toISOString();
@@ -142,13 +136,11 @@ test('GET /messages (user and since)', function(t) {
             time: key3.split('☃')[1],
             message: 'test'
         }]);
-        empty(messages);
+        empty(messages, t.end);
     });
 });
 
 test('GET /messages (since equal to last message)', function(t) {
-    t.plan(4);
-
     var millis = new Date().getTime();
     function createKey(user) {
         return user + '☃' + new Date(millis++).toISOString();
@@ -171,13 +163,11 @@ test('GET /messages (since equal to last message)', function(t) {
         var msgs = JSON.parse(body);
         t.equal(msgs.length, 0, 'should return 0 messages');
         t.deepEqual(msgs, []);
-        empty(messages);
+        empty(messages, t.end);
     });
 });
 
 test('GET /messages (since later than newest message)', function(t) {
-    t.plan(4);
-
     var millis = new Date().getTime();
     function createKey(user) {
         return user + '☃' + new Date(millis++).toISOString();
@@ -200,13 +190,11 @@ test('GET /messages (since later than newest message)', function(t) {
         var msgs = JSON.parse(body);
         t.equal(msgs.length, 0, 'should return 0 messages');
         t.deepEqual(msgs, []);
-        empty(messages);
+        empty(messages, t.end);
     });
 });
 
 test('GET /messages (last)', function(t) {
-    t.plan(4);
-
     var millis = new Date().getTime() - 100;
     function createKey(user) {
         return user + '☃' + new Date(millis++).toISOString();
@@ -238,24 +226,22 @@ test('GET /messages (last)', function(t) {
             time: key3.split('☃')[1],
             message: 'test'
         }]);
-        empty(messages);
+        empty(messages, t.end);
     });
 });
 
 test('GET /messages (since and last)', function(t) {
-    t.plan(3);
-
     request(uri + '/messages?user=christian&last=foo&since=bar', function(err, response, body) {
         t.ok(err === null, 'should not err');
         t.equal(response.statusCode, 400, 'should result in a \'bad request\'');
         t.equal(body, 'Specify either since or last');
+        t.end();
     });
 });
 
 test('teardown', function(t) {
-    t.plan(1);
-
     server.stop(function() {
         t.pass('teardown: server should stop');
+        t.end();
     });
 });
