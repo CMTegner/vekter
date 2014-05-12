@@ -20,21 +20,7 @@ ornament.settings = {
     inject: require('ornament/binding-backbone.js').read,
     listen: require('ornament/binding-backbone.js').listen,
     collection: require('ornament/binding-backbone.js').collection,
-    listenToCollection: function listenToCollection(items, add, remove) {
-        // TODO: sort
-        items.on('add', function(item) {
-            var index = items.models.indexOf(item);
-            add(item, index);
-        });
-        items.on('remove', function(item, collection, options) {
-            remove(item, options.index);
-        });
-        items.on('reset', function(collection, options) {
-            for (var i = options.previousModels.length - 1; i > -1; i--) {
-                remove(options.previousModels[i]);
-            }
-        });
-    }
+    listenToCollection: require('ornament/binding-backbone.js').listenToCollection
 };
 var foo = ornament(require('../templates/app.json'), {
     users: users,
