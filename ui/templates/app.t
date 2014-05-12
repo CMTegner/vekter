@@ -1,6 +1,7 @@
 <div class="container">
     <div class="row">
-        <div class="users col-lg-offset-2 col-lg-3 col-md-offset-1 col-md-4 col-sm-5">
+        <div class="users col-lg-offset-2 col-lg-3 col-md-offset-1 col-md-4 col-sm-5"
+             data-role="user-container">
             <a href="#" class="user" data-role="new-pm">
                 + Message User
             </a>

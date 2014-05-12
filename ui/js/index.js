@@ -109,10 +109,17 @@ document.querySelector('[data-role=new-pm]').addEventListener('click', function(
     input.focus();
 });
 
-//function onUserClick(event) {
-//    event.preventDefault();
-//    selectUser(event.currentTarget.getAttribute('data-user'));
-//}
+document.querySelector('[data-role=user-container]').addEventListener('click', function(event) {
+    event.preventDefault();
+    var el = event.target;
+    if (el.getAttribute('data-role') === 'new-pm') {
+        return;
+    }
+    while (!el.getAttribute('data-user')) {
+        el = el.parentElement;
+    }
+    selectUser(el.getAttribute('data-user'));
+});
 
 function selectUser(user) {
     selectedUser = user;
