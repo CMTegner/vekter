@@ -26,9 +26,7 @@
                         {{fromNow}}
                     </em>
                 </small>
-                <br>
-                {{message}}
-                <br>
+                {{=message}}
             </div>
         </div>
     </div>

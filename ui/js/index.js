@@ -5,6 +5,7 @@ var concat = require('concat-stream');
 var ornament = require('ornament/runtime');
 var MessageCollection = require('./collections/Message.js');
 var UserCollection = require('./collections/User.js');
+var marked = require('marked');
 
 var messages = new MessageCollection();
 var users = new UserCollection();
@@ -15,6 +16,18 @@ var uri = url.parse(location.href);
 var host = uri.protocol + '//' + uri.hostname + ':' + uri.port;
 var messageLimit = 20;
 var selectedUser;
+
+messages.on('add', function(message) {
+    while (messages.length > messageLimit) {
+        messages.shift();
+    }
+    message.set('message', marked(message.get('message'), {
+        gfm: true,
+        tables: false,
+        sanitize: true,
+        smartypants: true
+    }));
+});
 
 ornament.settings = {
     inject: require('ornament/binding-backbone.js').read,
@@ -37,12 +50,6 @@ setInterval(function() {
         user.set('latestMessageTimeFromNow', fromNow);
     });
 }, 1000);
-
-messages.on('add', function() {
-    while (messages.length > messageLimit) {
-        messages.shift();
-    }
-});
 
 users.on('add', function(user) {
     // TODO
