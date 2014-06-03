@@ -13,7 +13,10 @@ var users = new UserCollection();
 // getMessages interval id
 var mid;
 var uri = url.parse(location.href);
-var host = uri.protocol + '//' + uri.hostname + ':' + uri.port;
+var host = uri.protocol + '//' + uri.hostname;
+if (uri.port) {
+    host += ':' + uri.port;
+}
 var messageLimit = 20;
 var selectedUser;
 
