@@ -38,11 +38,14 @@ ornament.settings = {
     collection: require('ornament/binding-backbone.js').collection,
     listenToCollection: require('ornament/binding-backbone.js').listenToCollection
 };
-var foo = ornament(require('../templates/app.json'), {
+var tree = ornament(require('../templates/app.json'), {
     users: users,
     messages: messages
 });
-document.body.appendChild(foo.children[0]);
+var children = tree.childNodes;
+for (var i = 0; i < children.length; i++) {
+    document.body.appendChild(children[i]);
+}
 
 setInterval(function() {
     messages.forEach(function(message) {
