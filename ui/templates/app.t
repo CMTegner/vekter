@@ -20,7 +20,7 @@
             </div>
         </div>
         <div class="messages col-lg-5 col-md-6 col-sm-7">
-            <div repeat="messages">
+            <div repeat="messages" class="{{direction}}">
                 <small>
                     <em>
                         {{fromNow}}

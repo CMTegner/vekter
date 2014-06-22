@@ -67,7 +67,7 @@ function setup(secret) {
     console.log('Using directory: %s', dir);
 
     options.users = level(dir + '/users', { valueEncoding: 'json' });
-    options.messages = level(dir + '/messages');
+    options.messages = level(dir + '/messages', { valueEncoding: 'json' });
 
     var Client = require('irc').Client;
     options.client = new Client(args.server, args.nick);

@@ -1,4 +1,5 @@
 var createKey = require('./create-key.js');
+var User = require('../ui/js/models/User.js'); // TODO: Move to ~/common
 
 module.exports = function(client, users, messages) {
     return function(request, reply) {
@@ -14,17 +15,21 @@ module.exports = function(client, users, messages) {
             reply('Missing message').code(400);
             return;
         }
-        var data = {
-            latestMessage: message,
-            latestMessageTime: new Date().toISOString()
-        };
+        var u = new User({ id: user });
+        u.get('message').set({
+            message: message,
+            from: client.nick,
+            to: user,
+            direction: 'sent'
+        });
+        var data = u.toJSON();
         users.put(user, data, function(err) {
             if (err) {
                 console.error('Error while storing user', err);
                 return;
             }
-            var key = createKey(user);
-            messages.put(key, message, function(err) {
+            var key = createKey(user, data.message.time);
+            messages.put(key, data.message, function(err) {
                 if (err) {
                     console.error('Error while storing outgoing message', err);
                     return;

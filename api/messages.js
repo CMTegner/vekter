@@ -27,14 +27,8 @@ module.exports = function(messages) {
         messages.createReadStream(options)
             // TODO: concat-json-stream
             .on('data', function(chunk) {
-                var tokens = chunk.key.split('☃'); // TODO
-                var message = {
-                    id: chunk.key,
-                    name: tokens[0],
-                    time: tokens[1],
-                    message: chunk.value
-                };
-                data.push(message);
+                chunk.value.id = chunk.key;
+                data.push(chunk.value);
             })
             .on('end', function() {
                 if (options.reverse) {

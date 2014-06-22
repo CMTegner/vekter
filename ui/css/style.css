@@ -25,6 +25,19 @@
     overflow-wrap: break-word;
 }
 
+.messages > div p {
+    background: #eeeeee;
+    padding: 5px;
+}
+
+.messages > .sent {
+    margin-left: 20px;
+}
+
+.messages > .received {
+    margin-right: 20px;
+}
+
 .say {
     border-top: none;
 }

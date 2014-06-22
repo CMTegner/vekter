@@ -1,16 +1,22 @@
-var Model = require('backbone').Model;
-var moment = require('moment');
+var Model = require('backbone').Model; // TODO: backdash
+var Message = require('./Message.js');
 
+/**
+ * @param {String} [attributes.id] the user id, e.g. 'christian'
+ * @param {Message} [attributes.message] the last message to/from this user
+ * @type {Model}
+ */
 module.exports = Model.extend({
 
-    defaults: {
-        id: undefined, // String, e.g. "christian"
-        latestMessageTime: undefined, // moment
-        latestMessage: undefined // String
+    defaults: function() {
+        return {
+            message: new Message()
+        };
     },
 
-    parse: function(data) {
-        data.latestMessageTime = moment(data.latestMessageTime);
-        return data;
+    parse: function() {
+        var json = Model.prototype.parse.apply(this, arguments);
+        json.message = new Message(json.message, { parse: true });
+        return json;
     }
 });

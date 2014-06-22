@@ -47,14 +47,13 @@ for (var i = 0; i < children.length; i++) {
     document.body.appendChild(children[i]);
 }
 
+function fromNow(message) {
+    message.set('fromNow', message.get('time').fromNow());
+}
+
 setInterval(function() {
-    messages.forEach(function(message) {
-        message.set('fromNow', message.get('time').fromNow());
-    });
-    users.forEach(function(user) {
-        var fromNow = user.get('latestMessageTime').fromNow();
-        user.set('latestMessageTimeFromNow', fromNow);
-    });
+    messages.forEach(fromNow);
+    users.pluck('message').forEach(fromNow);
 }, 1000);
 
 users.on('add', function(user) {
@@ -81,6 +80,7 @@ function getMessages(user) {
             // TODO: data is an empty array when the backend can't be reached, wtf?
             var msg = _last(JSON.parse(data), messageLimit);
             messages.add(msg, { parse: true });
+            messages.forEach(fromNow);
         }));
 }
 
@@ -92,6 +92,7 @@ function getUsers() {
         .pipe(concat(function(data) {
             // TODO: data is an empty array when the backend can't be reached, wtf?
             users.add(JSON.parse(data), { parse: true, merge: true });
+            users.pluck('message').forEach(fromNow);
         }));
 }
 

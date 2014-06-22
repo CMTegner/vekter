@@ -3,12 +3,33 @@ var test = require('tape');
 var levelup = require('levelup');
 var memdown = require('memdown');
 var request = require('request');
+var moment = require('moment');
 var api = require('../');
+var Message = require('../ui/js/models/Message.js');
 
 var users;
 var messages;
 var server;
 var uri;
+
+var millis = new Date().getTime() - 1000;
+function createKey(user) {
+    return user + '☃' + new Date(millis++).toISOString();
+}
+
+function addMessage(messages, to, message, direction) {
+    var key = createKey(to);
+    var m = new Message({
+        id: key,
+        time: moment(millis++),
+        message: message,
+        from: 'noreply',
+        to: to,
+        direction: direction
+    });
+    messages.put(key, m.toJSON());
+    return m;
+}
 
 function empty(db, done) {
     var batch = [];
@@ -30,7 +51,10 @@ test('setup', function(t) {
         db: memdown,
         valueEncoding: 'json'
     });
-    messages = levelup(memdown);
+    messages = levelup({
+        db: memdown,
+        valueEncoding: 'json'
+    });
     server = api({
         client: new Emitter(),
         users: users,
@@ -63,100 +87,51 @@ test('GET /messages (empty db)', function(t) {
 });
 
 test('GET /messages (user only)', function(t) {
-    var millis = new Date().getTime();
-    function createKey(user) {
-        return user + '☃' + new Date(millis++).toISOString();
-    }
-
-    var key1 = createKey('christian');
-    messages.put(key1, 'foo bar 42');
-    var key2 = createKey('christian');
-    messages.put(key2, 'boom bang');
-    messages.put(createKey('john'), 'beep boop');
-    messages.put(createKey('john'), 'hello world');
-    var key3 = createKey('christian');
-    messages.put(key3, 'test');
-    messages.put(createKey('lisa'), 'golly gosh');
+    var m1 = addMessage(messages, 'christian', 'foo bar 42', 'sent');
+    var m2 = addMessage(messages, 'christian', 'boom bang', 'sent');
+    addMessage(messages, 'john', 'beep boop', 'sent');
+    addMessage(messages, 'john', 'hello world', 'sent');
+    var m3 = addMessage(messages, 'christian', 'test', 'sent');
+    addMessage(messages, 'lisa', 'golly gosh');
 
     request(uri + '/messages?user=christian', function(err, response, body) {
         t.ok(err === null, 'should not err');
         t.equal(response.statusCode, 200, 'should return \'OK\'');
         var msgs = JSON.parse(body);
         t.equal(msgs.length, 3, 'should return 3 messages');
-        t.deepEqual(msgs, [{
-            id: key1,
-            name: 'christian',
-            time: key1.split('☃')[1],
-            message: 'foo bar 42'
-        }, {
-            id: key2,
-            name: 'christian',
-            time: key2.split('☃')[1],
-            message: 'boom bang'
-        }, {
-            id: key3,
-            name: 'christian',
-            time: key3.split('☃')[1],
-            message: 'test'
-        }]);
+        t.deepEqual(msgs, [m1.toJSON(), m2.toJSON(), m3.toJSON()]);
         empty(messages, t.end);
     });
 });
 
 test('GET /messages (user and since)', function(t) {
-    var millis = new Date().getTime();
-    function createKey(user) {
-        return user + '☃' + new Date(millis++).toISOString();
-    }
+    var m1 = addMessage(messages, 'christian', 'foo bar 42', 'sent');
+    var m2 = addMessage(messages, 'christian', 'boom bang', 'sent');
+    addMessage(messages, 'john', 'beep boop', 'sent');
+    addMessage(messages, 'john', 'hello world', 'sent');
+    var m3 = addMessage(messages, 'christian', 'test', 'sent');
+    addMessage(messages, 'lisa', 'golly gosh');
 
-    var key1 = createKey('christian');
-    messages.put(key1, 'foo bar 42');
-    var key2 = createKey('christian');
-    messages.put(key2, 'boom bang');
-    messages.put(createKey('john'), 'beep boop');
-    messages.put(createKey('john'), 'hello world');
-    var key3 = createKey('christian');
-    messages.put(key3, 'test');
-    messages.put(createKey('lisa'), 'golly gosh');
-
-    var since = key1.split('☃')[1];
+    var since = m1.toJSON().time;
     request(uri + '/messages?user=christian&since=' + since, function(err, response, body) {
         t.ok(err === null, 'should not err');
         t.equal(response.statusCode, 200, 'should return \'OK\'');
         var msgs = JSON.parse(body);
         t.equal(msgs.length, 2, 'should return 2 messages');
-        t.deepEqual(msgs, [{
-            id: key2,
-            name: 'christian',
-            time: key2.split('☃')[1],
-            message: 'boom bang'
-        }, {
-            id: key3,
-            name: 'christian',
-            time: key3.split('☃')[1],
-            message: 'test'
-        }]);
+        t.deepEqual(msgs, [m2.toJSON(), m3.toJSON()]);
         empty(messages, t.end);
     });
 });
 
 test('GET /messages (since equal to last message)', function(t) {
-    var millis = new Date().getTime();
-    function createKey(user) {
-        return user + '☃' + new Date(millis++).toISOString();
-    }
+    addMessage(messages, 'christian', 'foo bar 42', 'sent');
+    addMessage(messages, 'christian', 'boom bang', 'sent');
+    addMessage(messages, 'john', 'beep boop', 'sent');
+    addMessage(messages, 'john', 'hello world', 'sent');
+    var m1 = addMessage(messages, 'christian', 'test', 'sent');
+    addMessage(messages, 'lisa', 'golly gosh');
 
-    var key1 = createKey('christian');
-    messages.put(key1, 'foo bar 42');
-    var key2 = createKey('christian');
-    messages.put(key2, 'boom bang');
-    messages.put(createKey('john'), 'beep boop');
-    messages.put(createKey('john'), 'hello world');
-    var key3 = createKey('christian');
-    messages.put(key3, 'test');
-    messages.put(createKey('lisa'), 'golly gosh');
-
-    var since = key3.split('☃')[1];
+    var since = m1.toJSON().time;
     request(uri + '/messages?user=christian&since=' + since, function(err, response, body) {
         t.ok(err === null, 'should not err');
         t.equal(response.statusCode, 200, 'should return \'OK\'');
@@ -168,22 +143,14 @@ test('GET /messages (since equal to last message)', function(t) {
 });
 
 test('GET /messages (since later than newest message)', function(t) {
-    var millis = new Date().getTime();
-    function createKey(user) {
-        return user + '☃' + new Date(millis++).toISOString();
-    }
+    addMessage(messages, 'christian', 'foo bar 42', 'sent');
+    addMessage(messages, 'christian', 'boom bang', 'sent');
+    addMessage(messages, 'john', 'beep boop', 'sent');
+    addMessage(messages, 'john', 'hello world', 'sent');
+    addMessage(messages, 'christian', 'test', 'sent');
+    addMessage(messages, 'lisa', 'golly gosh');
 
-    var key1 = createKey('christian');
-    messages.put(key1, 'foo bar 42');
-    var key2 = createKey('christian');
-    messages.put(key2, 'boom bang');
-    messages.put(createKey('john'), 'beep boop');
-    messages.put(createKey('john'), 'hello world');
-    var key3 = createKey('christian');
-    messages.put(key3, 'test');
-    messages.put(createKey('lisa'), 'golly gosh');
-
-    var since = new Date(millis++).toISOString();
+    var since = '2099-12-31T23:59:59.999Z';
     request(uri + '/messages?user=christian&since=' + since, function(err, response, body) {
         t.ok(err === null, 'should not err');
         t.equal(response.statusCode, 200, 'should return \'OK\'');
@@ -195,37 +162,19 @@ test('GET /messages (since later than newest message)', function(t) {
 });
 
 test('GET /messages (last)', function(t) {
-    var millis = new Date().getTime() - 100;
-    function createKey(user) {
-        return user + '☃' + new Date(millis++).toISOString();
-    }
-
-    var key1 = createKey('christian');
-    messages.put(key1, 'foo bar 42');
-    var key2 = createKey('christian');
-    messages.put(key2, 'boom bang');
-    messages.put(createKey('john'), 'beep boop');
-    messages.put(createKey('john'), 'hello world');
-    var key3 = createKey('christian');
-    messages.put(key3, 'test');
-    messages.put(createKey('lisa'), 'golly gosh');
+    addMessage(messages, 'christian', 'foo bar 42', 'sent');
+    var m1 = addMessage(messages, 'christian', 'boom bang', 'sent');
+    addMessage(messages, 'john', 'beep boop', 'sent');
+    addMessage(messages, 'john', 'hello world', 'sent');
+    var m2 = addMessage(messages, 'christian', 'test', 'sent');
+    addMessage(messages, 'lisa', 'golly gosh');
 
     request(uri + '/messages?user=christian&last=2', function(err, response, body) {
         t.ok(err === null, 'should not err');
         t.equal(response.statusCode, 200, 'should return \'OK\'');
         var msgs = JSON.parse(body);
         t.equal(msgs.length, 2, 'should return 2 messages');
-        t.deepEqual(msgs, [{
-            id: key2,
-            name: 'christian',
-            time: key2.split('☃')[1],
-            message: 'boom bang'
-        }, {
-            id: key3,
-            name: 'christian',
-            time: key3.split('☃')[1],
-            message: 'test'
-        }]);
+        t.deepEqual(msgs, [m1.toJSON(), m2.toJSON()]);
         empty(messages, t.end);
     });
 });
