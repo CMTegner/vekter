@@ -34,31 +34,30 @@
   },
   "homepage": "https://github.com/CMTegner/vekter",
   "dependencies": {
+    "backbone": "^1.1.2",
+    "basic-auth": "0.0.1",
+    "concat-stream": "^1.4.5",
+    "home-dir": "^0.2.0",
     "irc": "^0.3.6",
     "level": "^0.18.0",
-    "hapi": "^5.1.0",
-    "hyperquest": "^0.3.0",
-    "concat-stream": "^1.4.5",
-    "backbone": "^1.1.2",
-    "moment": "^2.6.0",
-    "lodash.last": "^2.4.1",
     "mkdirp": "^0.5.0",
-    "home-dir": "^0.2.0",
+    "moment": "^2.6.0",
     "nomnom": "^1.6.2",
-    "hapi-auth-basic": "^1.0.1",
-    "bcrypt": "^0.7.8",
     "read": "^1.0.5",
-    "ornament": "git://github.com/ornament/ornament"
+    "st": "^0.5.1"
   },
   "devDependencies": {
+    "browserify": "^4.1.2",
+    "hyperquest": "^0.3.0",
     "jshint": "^2.5.0",
     "jscs": "^1.4.3",
-    "browserify": "^4.1.2",
-    "nodemon": "^1.0.17",
-    "memdown": "^0.10.1",
     "levelup": "^0.18.3",
+    "lodash.last": "^2.4.1",
+    "marked": "^0.3.2",
+    "memdown": "^0.10.1",
+    "nodemon": "^1.0.17",
+    "ornament": "git://github.com/ornament/ornament",
     "request": "^2.34.0",
-    "tape": "^2.12.3",
-    "marked": "^0.3.2"
+    "tape": "^2.12.3"
   }
 }
