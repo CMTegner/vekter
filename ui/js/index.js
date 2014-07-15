@@ -3,8 +3,8 @@ var _last = require('lodash.last');
 var request = require('hyperquest');
 var concat = require('concat-stream');
 var ornament = require('ornament/runtime');
-var MessageCollection = require('./collections/Message.js');
-var UserCollection = require('./collections/User.js');
+var MessageCollection = require('../../collections/Message.js');
+var UserCollection = require('../../collections/User.js');
 var marked = require('marked');
 
 var messages = new MessageCollection();
@@ -163,7 +163,7 @@ document.forms[0].addEventListener('submit', function(event) {
             }
         })
         .end(JSON.stringify({
-            user: user,
+            to: user,
             message: message
         }));
 });
