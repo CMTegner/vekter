@@ -15,8 +15,14 @@ module.exports = Model.extend({
     },
 
     parse: function() {
-        var json = Model.prototype.parse.apply(this, arguments);
-        json.message = new Message(json.message, { parse: true });
+        var data = Model.prototype.parse.apply(this, arguments);
+        data.message = new Message(data.message, { parse: true });
+        return data;
+    },
+
+    toJSON: function() {
+        var json = Model.prototype.toJSON.apply(this, arguments);
+        json.message = json.message.toJSON();
         return json;
     }
 });
