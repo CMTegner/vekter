@@ -1,3 +1,5 @@
+var sep = '☃';
+
 /**
  * Create a message entry key.
  *
@@ -7,5 +9,7 @@
  */
 module.exports = function(user, date) {
     date = date || new Date().toISOString();
-    return user + '☃' + date;
+    return user + sep + date;
 };
+
+module.exports.sep = sep;
