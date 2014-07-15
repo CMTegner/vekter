@@ -1,17 +1,18 @@
-module.exports = function(users) {
-    return function(request, reply) {
-        var data = [];
-        users.createReadStream()
-            // TODO: concat-json-stream
-            .on('data', function(chunk) {
-                data.push(chunk.value);
-            })
-            .on('end', function() {
-                reply(data);
-            })
-            .on('error', function(err) {
-                console.error(err);
-                reply('Error reading users from db').code(500);
-            }); // TODO: Code coverage
-    };
+/**
+ * Get users.
+ *
+ * @param {level} users leveldb database containing users
+ * @param {Function} cb the node-style callback
+ */
+module.exports = function(users, cb) {
+    var data = [];
+    users.createReadStream()
+        // TODO: concat-json-stream
+        .on('data', function(chunk) {
+            data.push(chunk.value);
+        })
+        .on('end', function() {
+            cb(null, data);
+        })
+        .on('error', cb); // TODO: Code coverage
 };
