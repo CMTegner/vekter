@@ -53,17 +53,17 @@ oldUsers.createReadStream()
         newUsers.put(data.key, json);
         userCount++;
     })
-    .on('error', function (err) {
+    .on('error', function(err) {
         console.log('An error occurred while reading users', err);
     })
-    .on('end', function () {
-        newUsers.write(function (err) {
+    .on('end', function() {
+        newUsers.write(function(err) {
             if (err) {
                 console.error('Error storing converted users', err);
             } else {
                 console.log('%s users successfully converted', userCount);
             }
-        })
+        });
     });
 
 var oldMessages = level(dir + '.bak/messages');
@@ -83,15 +83,15 @@ oldMessages.createReadStream()
         newMessages.put(data.key, json);
         messageCount++;
     })
-    .on('error', function (err) {
+    .on('error', function(err) {
         console.log('An error occurred while reading messages', err);
     })
-    .on('end', function () {
-        newMessages.write(function (err) {
+    .on('end', function() {
+        newMessages.write(function(err) {
             if (err) {
                 console.error('Error storing converted messages', err);
             } else {
                 console.log('%s messages successfully converted', messageCount);
             }
-        })
+        });
     });
