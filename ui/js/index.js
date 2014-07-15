@@ -32,12 +32,7 @@ messages.on('add', function(message) {
     }));
 });
 
-ornament.settings = {
-    inject: require('ornament/binding-backbone.js').read,
-    listen: require('ornament/binding-backbone.js').listen,
-    collection: require('ornament/binding-backbone.js').collection,
-    listenToCollection: require('ornament/binding-backbone.js').listenToCollection
-};
+ornament.settings = require('ornament/binding-backbone.js');
 var tree = ornament(require('../templates/app.json'), {
     users: users,
     messages: messages

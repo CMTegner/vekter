@@ -5,28 +5,28 @@
             <a href="#" class="user" data-role="new-pm">
                 + Message User
             </a>
-            <div repeat="users"
+            <div repeat="this.users"
                  class="user"
-                 data-user="{{id}}">
+                 data-user="{{this.id}}">
                 <small class="pull-right">
                     <em>
-                        {{latestMessageTimeFromNow}}
+                        {{this.message.fromNow}}
                     </em>
                 </small>
-                {{id}}
+                {{this.id}}
                 <div>
-                    {{latestMessage}}
+                    {{this.message.message}}
                 </div>
             </div>
         </div>
         <div class="messages col-lg-5 col-md-6 col-sm-7">
-            <div repeat="messages" class="{{direction}}">
+            <div repeat="this.messages" class="{{this.direction}}">
                 <small>
                     <em>
-                        {{fromNow}}
+                        {{this.fromNow}}
                     </em>
                 </small>
-                {{=message}}
+                {{=this.message}}
             </div>
         </div>
     </div>
