@@ -2,7 +2,6 @@
 var path = require('path');
 var mkdir = require('mkdirp');
 var read = require('read');
-var bcrypt = require('bcrypt');
 var level = require('level');
 var server = require('../index.js');
 var args = require('nomnom')
@@ -37,6 +36,10 @@ var args = require('nomnom')
             return require('../package.json').version;
         }
     })
+    .option('echo', {
+        flag: true,
+        help: 'Use EchoClient (for testing)'
+    })
     .parse();
 
 if (args.user) {
@@ -69,18 +72,23 @@ function setup(secret) {
     options.users = level(dir + '/users', { valueEncoding: 'json' });
     options.messages = level(dir + '/messages', { valueEncoding: 'json' });
 
-    var Client = require('irc').Client;
+    var Client;
+    if (args.echo) {
+        Client = require('../client/EchoClient.js');
+    } else {
+        Client = require('irc').Client;
+    }
     options.client = new Client(args.server, args.nick);
     options.client.on('registered', function() {
         console.log('Connected to %s as %s', args.server, args.nick);
 
         if (secret) {
             options.username = args.user;
-            options.password = bcrypt.hashSync(secret, 10);
+            options.password = secret;
         }
-        var srv = server(options);
-        srv.start(function() {
-            console.log('Service running on http://%s:%s', srv.info.host, srv.info.port);
+        var srv = server(options).on('listening', function() {
+            var address = srv.address();
+            console.log('Service running on http://%s:%s', address.address, address.port);
         });
     });
 }
