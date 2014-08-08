@@ -352,23 +352,33 @@ test('messages.create (received)', function(t) {
     };
     api.create(options, function(err) {
         t.equal(err, null, 'should not err');
-        users.createReadStream()
-            .on('data', function(data) {
-                t.equal(data.key, 'bar', 'should use the sender\'s name as the key');
-                var expected = {
-                    id: 'bar',
-                    message: {
-                        time: data.value.message.time,
-                        message: 'msg',
-                        to: 'foo',
-                        from: 'bar',
-                        direction: 'received'
-                    }
-                };
-                t.deepEqual(data.value, expected, 'should store the user');
-                empty(users, function() {
-                    empty(messages, t.end);
+        var o = { messages: messages, users: users, user: 'bar', last: 1 };
+        api.read(o, function(err, msgs) {
+            t.equal(err, null, 'should not err');
+            t.equals(msgs.length, 1);
+            var msg = msgs[0];
+            t.equals(msg.to, options.to);
+            t.equals(msg.from, options.from);
+            t.equals(msg.message, options.message);
+            t.equals(msg.direction, options.direction);
+            users.createReadStream()
+                .on('data', function(data) {
+                    t.equal(data.key, 'bar', 'should use the sender\'s name as the key');
+                    var expected = {
+                        id: 'bar',
+                        message: {
+                            time: data.value.message.time,
+                            message: 'msg',
+                            to: 'foo',
+                            from: 'bar',
+                            direction: 'received'
+                        }
+                    };
+                    t.deepEqual(data.value, expected, 'should store the user');
+                    empty(users, function() {
+                        empty(messages, t.end);
+                    });
                 });
-            });
+        });
     });
 });
