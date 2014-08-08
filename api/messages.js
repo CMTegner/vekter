@@ -66,17 +66,19 @@ module.exports.read = function(options, cb) {
  */
 module.exports.create = function(options, cb) {
     var to = options.to;
-    to = to && to.trim() && to.toLowerCase();
+    to = to && to.trim();
     if (!to) {
         cb(new Error('No recipient specified'));
         return;
     }
+    to = to.toLowerCase();
     var from = options.from;
-    from = from && from.trim() && from.toLowerCase();
+    from = from && from.trim();
     if (!from) {
         cb(new Error('No sender specified'));
         return;
     }
+    from = from.toLowerCase();
     var message = options.message;
     message = message && message.trim();
     if (!message) {
@@ -102,7 +104,7 @@ module.exports.create = function(options, cb) {
             cb(new Error('Error while storing user'));
             return;
         }
-        var key = createKey(to, data.message.time);
+        key = createKey(key, data.message.time);
         options.messages.put(key, data.message, function(err) {
             if (err) {
                 cb(new Error('Error while storing message'));
