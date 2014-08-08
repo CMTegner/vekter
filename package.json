@@ -1,6 +1,6 @@
 {
   "name": "vekter",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "IRC BNC with a web UI",
   "main": "index.js",
   "preferGlobal": true,
