@@ -26,6 +26,6 @@
 * Dark theme
 * Submit messages on 'return' (toggle option)
 * Take webcam picture (w/canvas preview) > upload to server > post link (http://shinydemos.com/photo-booth/)
-* Store username in URL
+* Store username in URL (https://www.npmjs.org/package/routes-router)
 * Write HTTP tests
 * Move argument validation/sanitation to router?
