@@ -38,10 +38,6 @@
                     <textarea id="message"
                               class="form-control"
                               autofocus></textarea>
-                    <button class="btn btn-primary btn-block"
-                            type="submit">
-                        Send
-                    </button>
                 </div>
             </form>
         </div>
