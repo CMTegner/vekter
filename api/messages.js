@@ -6,9 +6,9 @@ var User = require('../models/User.js');
  *
  * @param {Object} options
  * @param {level} options.messages leveldb database containing messages
- * @param {Object} options.user
- * @param {Object} [options.since]
- * @param {Object} [options.last]
+ * @param {String} options.user
+ * @param {Date} [options.since]
+ * @param {Number} [options.last]
  * @param {Function} cb the node-style callback
  */
 module.exports.read = function(options, cb) {
