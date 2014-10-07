@@ -116,12 +116,14 @@ document.querySelector('[data-role=user-container]').addEventListener('click', f
     selectUser(el.getAttribute('data-user'));
 });
 
+var textarea = document.querySelector('textarea');
+
 function selectUser(user) {
     selectedUser = user;
     var input = document.querySelector('input');
     input.style.display = 'none';
     input.value = user;
-    document.querySelector('textarea').focus();
+    textarea.focus();
     messages.reset();
     // TODO: Abort pending request
     clearInterval(mid);
@@ -135,7 +137,6 @@ document.forms[0].addEventListener('submit', function(event) {
     event.preventDefault();
     var input = document.querySelector('input');
     var user = input.value.trim();
-    var textarea = document.querySelector('textarea');
     var message = textarea.value.trim();
     if (!user || !message) {
         return;
