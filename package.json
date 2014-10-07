@@ -39,6 +39,7 @@
     "concat-stream": "^1.4.5",
     "home-dir": "^0.2.0",
     "irc": "^0.3.6",
+    "keydown": "0.0.3",
     "level": "^0.18.0",
     "mkdirp": "^0.5.0",
     "moment": "^2.8.1",

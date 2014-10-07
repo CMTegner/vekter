@@ -6,6 +6,7 @@ var ornament = require('ornament/runtime');
 var MessageCollection = require('../../collections/Message.js');
 var UserCollection = require('../../collections/User.js');
 var marked = require('marked');
+var keydown = require('keydown');
 
 var messages = new MessageCollection();
 var users = new UserCollection();
@@ -133,8 +134,14 @@ function selectUser(user) {
     getMessages(user);
 }
 
+keydown('<enter>', textarea).on('pressed', onSubmit);
+
 document.forms[0].addEventListener('submit', function(event) {
     event.preventDefault();
+    onSubmit();
+});
+
+function onSubmit() {
     var input = document.querySelector('input');
     var user = input.value.trim();
     var message = textarea.value.trim();
@@ -162,4 +169,4 @@ document.forms[0].addEventListener('submit', function(event) {
             to: user,
             message: message
         }));
-});
+}
