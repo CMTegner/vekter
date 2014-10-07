@@ -31,11 +31,30 @@
 }
 
 .messages > .sent {
-    margin-left: 20px;
+    margin-right: 14px;
 }
 
 .messages > .received {
-    margin-right: 20px;
+    margin-left: 14px;
+}
+
+.messages > div p:before {
+    width: 0;
+    height: 0;
+    border-bottom: 18px solid transparent;
+    position: absolute;
+    content: " ";
+    margin-top: -5px;
+}
+
+.messages > .sent p:before {
+    border-left: 14px solid #eee;
+    right: 15px;
+}
+
+.messages > .received p:before {
+    border-right: 14px solid #eee;
+    left: 15px;
 }
 
 .say {
